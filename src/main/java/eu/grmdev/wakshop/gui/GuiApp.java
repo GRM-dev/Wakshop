@@ -38,6 +38,9 @@ public class GuiApp extends Application {
 		currentStage = primaryStage;
 		views = new HashMap<>();
 		wakshop = new Wakshop();
+		currentStage.setOnCloseRequest(event -> {
+			Main.close();
+		});
 		currentStage.setTitle("Wakshop - Manage your workshops freely");
 		currentStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo_s.png")));
 		currentStage.setMinHeight(380);

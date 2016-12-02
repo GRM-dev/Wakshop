@@ -1,5 +1,7 @@
 package eu.grmdev.wakshop;
 
+import com.github.fluent.hibernate.cfg.Fluent;
+
 import eu.grmdev.wakshop.gui.GuiApp;
 
 public class Main {
@@ -15,6 +17,7 @@ public class Main {
 		if (gui != null) {
 			gui.getCurrentStage().close();
 		}
+		Fluent.factory().close();
 	}
 	
 }
