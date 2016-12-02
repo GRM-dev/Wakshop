@@ -1,13 +1,22 @@
 package eu.grmdev.wakshop.gui.controllers;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import eu.grmdev.wakshop.gui.GuiApp;
 import eu.grmdev.wakshop.gui.ViewType;
 import eu.grmdev.wakshop.utils.Messages;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 
-public class LoginViewController {
+public class LoginViewController implements Initializable {
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		
+	}
+	
 	@FXML
 	private TextField tfName;
 	

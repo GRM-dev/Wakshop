@@ -10,19 +10,13 @@ import javax.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "workshops")
 @Data
-public class Workshop {
+@Table(name = "config")
+public class Config {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	@Column(name = "f_name", unique = true, nullable = false)
-	private String name;
-	@Column(name = "f_archieved")
-	private boolean archieved;
-	@Column(name = "f_chat_on")
-	private boolean chatEnabled;
-	@Column(name = "f_file_transfer_on")
-	private boolean fileTransferEnabled;
+	@Column(name = "f_save_dir")
+	private String saveDirPath;
 	
 }
