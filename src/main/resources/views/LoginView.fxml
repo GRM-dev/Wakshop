@@ -24,14 +24,14 @@
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
                   <Label text="Enter Your Name" />
-                  <TextField maxWidth="200.0">
+                  <TextField fx:id="tfName" maxWidth="200.0">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>
                   </TextField>
                </children>
             </HBox>
-            <Button minWidth="80.0" mnemonicParsing="false" text="Enter  -&gt;">
+            <Button minWidth="80.0" mnemonicParsing="false" onAction="#enterButton_Click" text="Enter  -&gt;">
                <VBox.margin>
                   <Insets top="15.0" />
                </VBox.margin></Button>
