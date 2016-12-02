@@ -1,5 +1,7 @@
 package eu.grmdev.wakshop.gui.controllers;
 
+import eu.grmdev.wakshop.gui.GuiApp;
+import eu.grmdev.wakshop.gui.ViewType;
 import eu.grmdev.wakshop.utils.Messages;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,8 +20,8 @@ public class LoginViewController {
 				Messages.ShowWarningMessage("Wrong Username!", "Your username is to short!\nIt should be longer than 5 characters");
 			}
 			else {
-				System.out.println("Logged in");
-				
+				System.out.println("Sign in");
+				GuiApp.getInstance().changeView(ViewType.MAIN);
 			}
 		}
 		else {
