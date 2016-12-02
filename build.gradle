@@ -1,0 +1,162 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+         classpath 'com.github.rholder:gradle-one-jar:1.0.4'
+    }
+}
+
+import org.apache.tools.ant.taskdefs.condition.Os
+apply from: "http://dl.bintray.com/content/shemnon/javafx-gradle/8.1.1/javafx.plugin"
+
+apply plugin: 'java'
+apply plugin: 'pmd'
+apply plugin: 'eclipse'
+apply plugin: 'gradle-one-jar'
+apply plugin: 'signing'
+apply plugin: 'idea'
+//apply plugin: 'application'
+
+group = "eu.grmdev"
+description = "Workshops Helper App"
+version = '1.0'
+def mainClassName = "eu.grmdev.wakshop.Main"
+def appId = "Wakshop"
+archivesBaseName = appId
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': appId,
+                   'Implementation-Version': version
+    }
+}
+
+task execJar(type: OneJar) {
+	mainClass = mainClassName
+	archiveName = archivesBaseName+"-V"+version+".jar"
+}
+
+task javadocJar(type: Jar) {
+	classifier = 'javadoc'
+	from javadoc
+}
+
+task sourcesJar(type: Jar) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+artifacts {
+	archives javadocJar, sourcesJar
+}
+
+repositories {
+	mavenCentral()
+	mavenLocal()
+	jcenter()
+}
+
+dependencies {
+	compile group: 'com.google.guava', 						name: 'guava', 						version: '20.0'
+	compile group: 'org.apache.commons', 					name: 'commons-lang3', 				version: '3.5'
+	compile group: 'org.apache.logging.log4j', 				name: 'log4j-core', 				version: '2.7'
+	compile group: 'org.apache.logging.log4j', 				name: 'log4j', 						version: '2.7'
+
+	compileOnly('org.projectlombok:lombok')
+	providedCompile "org.projectlombok:lombok:1.16.10"
+
+	testCompile 'junit:junit:4.12'
+	testCompile 'org.assertj:assertj-core:3.5.2'
+}
+
+task loadProperties {
+	def home = System.properties['user.home']
+	def fileProp = home + "/keystore/wakshop.gradle.properties";
+	def fileKey = home + "/keystore/wakshop_keystore.jks"
+	Properties props = new Properties()
+	
+	if (!file(fileProp).exists()) {
+		if(!file(home + "/keystore").exists()) {
+			file(home + "/keystore").mkdir()
+		}
+		if(file(fileProp).createNewFile()) {
+			println "File " + fileProp + " Created"
+			if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+				println "*** WINDOWS "
+				println "You should write properties on your own (rPass, storePass & wakshop_key_url)"
+			} else if (Os.isFamily(Os.FAMILY_UNIX)) {
+				println "*** LINUX "
+				props.setProperty("rPass", "$System.env.HB_SIGN_REL_PSWD")
+				props.setProperty("storePass", "$System.env.HB_SIGN_STORE_PSWD")
+				props.setProperty("wakshop_key_url", "$System.env.HB_KEYSTORE")
+				props.store(new FileOutputStream(fileProp), null)
+			}
+		} else {
+			println "Error creating file!"
+		}
+	}
+	
+	props.load(new FileInputStream(fileProp))
+	project.ext.rPass = props.getProperty('rPass')
+	project.ext.storePass = props.getProperty('storePass')
+	project.ext.key_file_url = props.getProperty('wakshop_key_url')
+	
+	def f = new File(fileKey)
+	if (!f.exists()) {
+		println key_file_url
+		new URL(key_file_url).withInputStream{ i -> f.withOutputStream{ it << i }}
+	}
+}
+
+build.dependsOn loadProperties
+
+String getProjectProperty(String propertyName) {
+	project.hasProperty(propertyName) ? project.property(propertyName) : null
+}
+
+javafx {
+	javaRuntime = System.properties['JAVA_HOME']
+	appID appId
+	appName appId
+	mainClass = mainClassName
+	
+	jvmArgs = ['-XX:+AggressiveOpts', '-XX:CompileThreshold=1']
+	systemProperties = ['prism.disableRegionCaching':'true']
+	arguments = ['-l', '--fast']
+
+	// Generate key: keytool -genkey -alias release -keyalg RSA -keystore keystore.jks -keysize 2048
+	releaseKey {
+		alias = 'release'
+		keyPass = getProjectProperty('rPass')
+		keyStore = file("${System.properties['user.home']}/keystore/wakshop_keystore.jks")
+		storePass = getProjectProperty('storePass')
+	}
+	
+	signingMode 'release'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.2.1'
+}
+
+task pmd {
+	doLast {
+		println 'Running PMD static code analysis'
+		ant {
+			taskdef(name:'pmd', classname:'net.sourceforge.pmd.ant.PMDTask', classpath: configurations.pmdConf.asPath)
+			pmd(shortFilenames:'true', failonruleviolation:'true', rulesetfiles:'conf/pmd-rules.xml') {
+				formatter(type:'csv', tofile:'myreport.csv', toConsole:'true')
+				fileset(dir: "src/main/java") {
+					include(name: '**/*.java')
+				}
+				fileset(dir: "src/test/java") {
+					include(name: '**/*.java')
+				}        
+			}
+		}
+	}
+}
