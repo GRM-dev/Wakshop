@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 import eu.grmdev.wakshop.Main;
 import eu.grmdev.wakshop.gui.GuiApp;
 import eu.grmdev.wakshop.gui.ViewType;
+import eu.grmdev.wakshop.utils.Focusable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,13 +17,13 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
-public class MainViewController implements Initializable {
+public class MainViewController implements Focusable {
 	@FXML
 	private BorderPane borderPane;
 	@FXML
 	private VBox vBox;
 	@FXML
-	private Button homeButton;
+	private Button homeButton, settingsButton;
 	private Map<ViewType, Initializable> innerControllers = new HashMap<>();
 	
 	@Override
@@ -31,19 +32,25 @@ public class MainViewController implements Initializable {
 		changeViewTo(ViewType.MENU);
 	}
 	
+	@Override
+	public void onFocus(Object requestingObject) {
+		
+	}
+	
 	public void changeViewTo(ViewType viewType) {
 		try {
 			if (!innerControllers.containsKey(viewType)) {
-				Initializable c;
-				c = (Initializable) viewType.getControllerClazz().newInstance();
+				Focusable c = (Focusable) viewType.getControllerClazz().newInstance();
 				innerControllers.put(viewType, c);
 				GuiApp.getNode(viewType, c);
 			}
-			Node node = (Node) innerControllers.get(viewType);
 			vBox.getChildren().clear();
 			homeButton.setDisable(viewType == ViewType.MENU);
+			settingsButton.setDisable(viewType == ViewType.SETTINGS);
+			Node node = (Node) innerControllers.get(viewType);
 			vBox.getChildren().add(node);
 			borderPane.setCenter(vBox);
+			((Focusable) node).onFocus(this);
 		}
 		catch (InstantiationException e) {
 			e.printStackTrace();

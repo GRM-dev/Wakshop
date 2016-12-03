@@ -11,15 +11,16 @@ import eu.grmdev.wakshop.Main;
 import eu.grmdev.wakshop.core.IWakshop;
 import eu.grmdev.wakshop.core.Wakshop;
 import eu.grmdev.wakshop.gui.controllers.MainViewController;
+import eu.grmdev.wakshop.utils.Focusable;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import lombok.Getter;
 
 public class GuiApp extends Application {
@@ -64,14 +65,15 @@ public class GuiApp extends Application {
 			if (!views.containsKey(viewType)) {
 				createView(viewType);
 			}
-			currentStage.setScene(views.get(viewType));
+			Scene view = views.get(viewType);
+			currentStage.setScene(view);
 		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public static Parent getNode(ViewType viewType, Initializable root) {
+	public static Parent getNode(ViewType viewType, Focusable root) {
 		try {
 			if (!views.containsKey(viewType)) {
 				createView(viewType, root);
@@ -89,7 +91,7 @@ public class GuiApp extends Application {
 		createView(viewType, null);
 	}
 	
-	private static void createView(ViewType viewType, Initializable root) throws IOException {
+	private static void createView(ViewType viewType, Focusable root) throws IOException {
 		URL viewUrl = GuiApp.class.getResource(viewType.getPath());
 		FXMLLoader loader = new FXMLLoader(viewUrl);
 		if (root != null) {
@@ -98,6 +100,11 @@ public class GuiApp extends Application {
 		}
 		Parent view = loader.load();
 		Scene scene = new Scene(view);
+		if (root != null) {
+			view.addEventHandler(WindowEvent.WINDOW_SHOWN, (e) -> {
+				root.onFocus(e);
+			});
+		}
 		scene.addEventHandler(KeyEvent.KEY_PRESSED, t -> {
 			if (t.getCode() == KeyCode.ESCAPE) {
 				Main.close();

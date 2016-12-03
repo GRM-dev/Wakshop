@@ -3,18 +3,13 @@ package eu.grmdev.wakshop.gui.controllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import eu.grmdev.wakshop.utils.Focusable;
+import javafx.fxml.Initializable;
 import javafx.scene.layout.BorderPane;
 
-public class SettingsViewController extends BorderPane implements Focusable {
+public class WorkshopManageViewController extends BorderPane implements Initializable {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
-	}
-	
-	@Override
-	public void onFocus(Object requestingObject) {
 		
 	}
 	
