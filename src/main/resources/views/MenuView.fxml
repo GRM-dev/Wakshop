@@ -2,19 +2,23 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<fx:root alignment="TOP_CENTER" maxWidth="-Infinity" prefWidth="300.0" type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
-     <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#manageButton_Click" text="Manage Your Saved Workshops">
-      <VBox.margin>
-         <Insets />
-      </VBox.margin></Button>
-     <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#createButton_Click" text="Create Workshops Session">
-      <VBox.margin>
-         <Insets top="15.0" />
-      </VBox.margin></Button>
-     <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#joinButton_Click" text="Join Workshops Session">
-      <VBox.margin>
-         <Insets top="15.0" />
-      </VBox.margin></Button>
+<fx:root maxWidth="-Infinity" prefWidth="300.0" type="BorderPane" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+     <center>
+     	<VBox alignment="CENTER">
+		     <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#manageButton_Click" text="Manage Your Saved Workshops">
+
+		      </Button>
+		     <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#createButton_Click" text="Create Workshops Session">
+            <VBox.margin>
+               <Insets top="15.0" />
+            </VBox.margin></Button>
+		     <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#joinButton_Click" text="Join Workshops Session">
+            <VBox.margin>
+               <Insets top="15.0" />
+            </VBox.margin></Button>
+	      </VBox>
+      </center>
 </fx:root>

@@ -3,19 +3,12 @@ package eu.grmdev.wakshop.gui.controllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import eu.grmdev.wakshop.gui.GuiApp;
-import eu.grmdev.wakshop.gui.ViewType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
 
-public class MenuViewController extends VBox implements Initializable {
-	
-	public MenuViewController() {
-		GuiApp.getInstance().getNode(ViewType.MENU, this);
-		
-	}
+public class MenuViewController extends BorderPane implements Initializable {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {

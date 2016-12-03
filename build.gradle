@@ -16,7 +16,6 @@ apply plugin: 'eclipse'
 apply plugin: 'gradle-one-jar'
 apply plugin: 'signing'
 apply plugin: 'idea'
-//apply plugin: 'application'
 
 group = "eu.grmdev"
 description = "Workshops Helper App"

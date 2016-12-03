@@ -3,6 +3,7 @@ package eu.grmdev.wakshop;
 import com.github.fluent.hibernate.cfg.Fluent;
 
 import eu.grmdev.wakshop.gui.GuiApp;
+import javafx.application.Platform;
 
 public class Main {
 	
@@ -13,11 +14,16 @@ public class Main {
 	}
 	
 	public static void close() {
-		GuiApp gui = GuiApp.getInstance();
-		if (gui != null) {
-			gui.getCurrentStage().close();
-		}
-		Fluent.factory().close();
+		Thread t = new Thread(() -> {
+			Platform.runLater(() -> {
+				GuiApp gui = GuiApp.getInstance();
+				if (gui != null) {
+					gui.getCurrentStage().close();
+				}
+			});
+			Fluent.factory().close();
+		});
+		t.setName("Closing thread");
+		t.start();
 	}
-	
 }

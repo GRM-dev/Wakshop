@@ -10,6 +10,7 @@ import com.guigarage.flatterfx.FlatterFX;
 import eu.grmdev.wakshop.Main;
 import eu.grmdev.wakshop.core.IWakshop;
 import eu.grmdev.wakshop.core.Wakshop;
+import eu.grmdev.wakshop.gui.controllers.MainViewController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -29,7 +30,9 @@ public class GuiApp extends Application {
 	private static boolean started;
 	@Getter
 	private static GuiApp instance;
-	private Map<ViewType, Scene> views;
+	@Getter
+	private static MainViewController mainViewInstance;
+	private static Map<ViewType, Scene> views;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -68,7 +71,7 @@ public class GuiApp extends Application {
 		}
 	}
 	
-	public Parent getNode(ViewType viewType, Initializable root) {
+	public static Parent getNode(ViewType viewType, Initializable root) {
 		try {
 			if (!views.containsKey(viewType)) {
 				createView(viewType, root);
@@ -82,12 +85,12 @@ public class GuiApp extends Application {
 		}
 	}
 	
-	private void createView(ViewType viewType) throws IOException {
+	private static void createView(ViewType viewType) throws IOException {
 		createView(viewType, null);
 	}
 	
-	private void createView(ViewType viewType, Initializable root) throws IOException {
-		URL viewUrl = getClass().getResource(viewType.getPath());
+	private static void createView(ViewType viewType, Initializable root) throws IOException {
+		URL viewUrl = GuiApp.class.getResource(viewType.getPath());
 		FXMLLoader loader = new FXMLLoader(viewUrl);
 		if (root != null) {
 			loader.setRoot(root);
@@ -101,5 +104,11 @@ public class GuiApp extends Application {
 			}
 		});
 		views.put(viewType, scene);
+	}
+	
+	public static void setMainViewController(MainViewController controller) {
+		if (controller != null && mainViewInstance == null) {
+			mainViewInstance = controller;
+		}
 	}
 }
