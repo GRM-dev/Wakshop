@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" type="BorderPane" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root type="BorderPane" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <HBox alignment="CENTER" BorderPane.alignment="CENTER">
          <children>
@@ -17,6 +21,43 @@
       </HBox>
    </top>
    <bottom>
-      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <HBox BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="lblMsg" />
+         </children></HBox>
    </bottom>
+   <right>
+      <VBox spacing="20.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#defaultsButton_Click" text="Defaults" />
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#saveButton_Click" text="Save" />
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#restoreButton_Click" text="Restore" />
+         </children>
+         <BorderPane.margin>
+            <Insets left="10.0" top="15.0" />
+         </BorderPane.margin>
+      </VBox>
+   </right>
+   <center>
+      <VBox spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="BASELINE_CENTER" maxWidth="1.7976931348623157E308" spacing="15.0">
+               <children>
+                  <Label text="Save Dir Path:" />
+                  <Label fx:id="lblSaveDirPath" text="_path_" />
+                  <Button mnemonicParsing="false" onAction="#changeSaveDirPathButton_Click" text="Change ..." />
+               </children>
+            </HBox>
+            <HBox alignment="BASELINE_CENTER" maxWidth="1.7976931348623157E308" spacing="20.0">
+               <children>
+                  <Label text="Save User Name?" />
+                  <CheckBox fx:id="cbSaveName" mnemonicParsing="false" text="Save" />
+               </children>
+            </HBox>
+         </children>
+         <BorderPane.margin>
+            <Insets top="15.0" />
+         </BorderPane.margin>
+      </VBox>
+   </center>
 </fx:root>

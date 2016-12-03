@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.github.fluent.hibernate.H;
+
 import lombok.Data;
 
 @Entity
@@ -18,5 +20,29 @@ public class Config {
 	private int id;
 	@Column(name = "f_save_dir")
 	private String saveDirPath;
+	@Column(name = "f_save_name")
+	private boolean saveName;
 	
+	public static Config getDefaultConfig() {
+		Config c = new Config();
+		c.setSaveDirPath("");
+		c.setSaveName(true);
+		return c;
+	}
+	
+	public static synchronized Config getConfig() {
+		Object object = H.request(Config.class).first();
+		if (object != null) {
+			return (Config) object;
+		}
+		else {
+			object = getDefaultConfig();
+			object = H.save(object);
+			return (Config) object;
+		}
+	}
+	
+	public static synchronized void save(Config config) {
+		H.saveOrUpdate(config);
+	}
 }

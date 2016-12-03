@@ -1,10 +1,12 @@
 package eu.grmdev.wakshop.utils;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import eu.grmdev.wakshop.gui.GuiApp;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
@@ -13,6 +15,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 
 public class Messages {
 	public static void showInformationDialog(String header, String content) {
@@ -64,6 +68,14 @@ public class Messages {
 		return result;
 	}
 	
+	private static Alert createAlert(String title, String header, String content, AlertType alertType) {
+		Alert alert = new Alert(alertType);
+		alert.setTitle(title);
+		alert.setHeaderText(header);
+		alert.setContentText(content);
+		return alert;
+	}
+	
 	public static Optional<String> showInputDialog(String title, String header, String context) {
 		return showInputDialog(title, header, context, "", null);
 	}
@@ -85,11 +97,37 @@ public class Messages {
 		return result;
 	}
 	
-	private static Alert createAlert(String title, String header, String content, AlertType alertType) {
-		Alert alert = new Alert(alertType);
-		alert.setTitle(title);
-		alert.setHeaderText(header);
-		alert.setContentText(content);
-		return alert;
+	public static File showFilePicker(String title) {
+		return showFilePicker(title, null);
+	}
+	
+	public static File showFilePicker(String title, String initialDirectory) {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle(title);
+		if (initialDirectory != null && initialDirectory.length() > 0) {
+			File iniDir = new File(initialDirectory);
+			if (iniDir.exists()) {
+				fileChooser.setInitialDirectory(iniDir);
+			}
+		}
+		File file = fileChooser.showOpenDialog(GuiApp.getInstance().getCurrentStage());
+		return file;
+	}
+	
+	public static File showDirectoryPicker(String title) {
+		return showDirectoryPicker(title, null);
+	}
+	
+	public static File showDirectoryPicker(String title, String initialDirectory) {
+		DirectoryChooser directoryChooser = new DirectoryChooser();
+		directoryChooser.setTitle(title);
+		if (initialDirectory != null && initialDirectory.length() > 0) {
+			File iniDir = new File(initialDirectory);
+			if (iniDir.exists()) {
+				directoryChooser.setInitialDirectory(iniDir);
+			}
+		}
+		File dir = directoryChooser.showDialog(GuiApp.getInstance().getCurrentStage());
+		return dir;
 	}
 }

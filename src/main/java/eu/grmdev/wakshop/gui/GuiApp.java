@@ -25,7 +25,6 @@ import javafx.stage.WindowEvent;
 import lombok.Getter;
 
 public class GuiApp extends Application {
-	
 	private IWakshop wakshop;
 	@Getter
 	private Stage currentStage;
@@ -48,8 +47,8 @@ public class GuiApp extends Application {
 		});
 		currentStage.setTitle("Wakshop - Manage your workshops freely");
 		currentStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo_s.png")));
-		currentStage.setMinHeight(380);
-		currentStage.setMinWidth(300);
+		currentStage.setMinHeight(400);
+		currentStage.setMinWidth(480);
 		changeViewTo(ViewType.LOGIN);
 		currentStage.show();
 		FlatterFX.style();
