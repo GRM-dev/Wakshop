@@ -12,6 +12,7 @@ import eu.grmdev.wakshop.core.IWakshop;
 import eu.grmdev.wakshop.core.Wakshop;
 import eu.grmdev.wakshop.gui.controllers.MainViewController;
 import eu.grmdev.wakshop.utils.Focusable;
+import eu.grmdev.wakshop.utils.Messages;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -70,6 +71,7 @@ public class GuiApp extends Application {
 		}
 		catch (IOException e) {
 			e.printStackTrace();
+			Messages.showExceptionDialog(e, "Changing View to: " + viewType.name() + " has failed");
 		}
 	}
 	
@@ -83,6 +85,7 @@ public class GuiApp extends Application {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
+			Messages.showExceptionDialog(e, "Couldn't get node " + viewType.name());
 			return null;
 		}
 	}

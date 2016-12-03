@@ -26,7 +26,7 @@ public class LoginViewController implements Initializable {
 		int l = name.length();
 		if (l > 0) {
 			if (l < 5) {
-				Messages.ShowWarningMessage("Wrong Username!", "Your username is to short!\nIt should be longer than 5 characters");
+				Messages.showWarningDialog("Wrong Username!", "Your username is to short!\nIt should be longer than 5 characters");
 			}
 			else {
 				System.out.println("Sign in");
@@ -34,7 +34,7 @@ public class LoginViewController implements Initializable {
 			}
 		}
 		else {
-			Messages.ShowWarningMessage("Wrong Username!", "No username provided!");
+			Messages.showWarningDialog("Wrong Username!", "No username provided!");
 		}
 	}
 }
