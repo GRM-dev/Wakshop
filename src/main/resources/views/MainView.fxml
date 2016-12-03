@@ -9,9 +9,9 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.grmdev.wakshop.gui.controllers.MainViewController">
+<ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="600.0" prefWidth="800.0" stylesheets="@../styles/Basic.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.grmdev.wakshop.gui.controllers.MainViewController">
    <content>
-      <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+      <BorderPane fx:id="borderPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: transparent;">
          <top>
             <ImageView fitHeight="130.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
                <image>
@@ -19,32 +19,12 @@
                </image>
             </ImageView>
          </top>
-         <center>
-            <VBox alignment="TOP_CENTER" maxWidth="-Infinity" prefWidth="300.0" BorderPane.alignment="CENTER">
-               <BorderPane.margin>
-                  <Insets left="10.0" right="10.0" top="40.0" />
-               </BorderPane.margin>
-               <children>
-                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#manageButton_Click" text="Manage Your Saved Workshops" />
-                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#createButton_Click" text="Create Workshop">
-                     <VBox.margin>
-                        <Insets top="15.0" />
-                     </VBox.margin>
-                  </Button>
-                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#joinButton_Click" text="Join Workshop">
-                     <VBox.margin>
-                        <Insets top="15.0" />
-                     </VBox.margin>
-                  </Button>
-               </children>
-            </VBox>
-         </center>
          <bottom>
             <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER_LEFT">
               <buttons>
                   <Button mnemonicParsing="false" onAction="#settingsButton_Click" text="Settings" ButtonBar.buttonData="LEFT" />
-                  <Button mnemonicParsing="false" onAction="#logoutButton_Click" text="Logout" ButtonBar.buttonData="BACK_PREVIOUS"/>
-                  <Button cancelButton="true" mnemonicParsing="false" onAction="#exitButton_Click" text="Exit" ButtonBar.buttonData="CANCEL_CLOSE"/>
+                  <Button mnemonicParsing="false" onAction="#logoutButton_Click" text="Logout" ButtonBar.buttonData="BACK_PREVIOUS" />
+                  <Button cancelButton="true" mnemonicParsing="false" onAction="#exitButton_Click" text="Exit" ButtonBar.buttonData="CANCEL_CLOSE" />
               </buttons>
                <BorderPane.margin>
                   <Insets right="10.0" />
@@ -54,6 +34,12 @@
                </padding>
             </ButtonBar>
          </bottom>
+         <center>
+            <VBox fx:id="vBox" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets top="20.0" />
+               </BorderPane.margin></VBox>
+         </center>
       </BorderPane>
    </content>
 </ScrollPane>

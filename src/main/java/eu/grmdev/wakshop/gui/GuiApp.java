@@ -11,8 +11,8 @@ import eu.grmdev.wakshop.Main;
 import eu.grmdev.wakshop.core.IWakshop;
 import eu.grmdev.wakshop.core.Wakshop;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -45,7 +45,7 @@ public class GuiApp extends Application {
 		currentStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo_s.png")));
 		currentStage.setMinHeight(380);
 		currentStage.setMinWidth(300);
-		changeView(ViewType.LOGIN);
+		changeViewTo(ViewType.LOGIN);
 		currentStage.show();
 		FlatterFX.style();
 	}
@@ -56,27 +56,50 @@ public class GuiApp extends Application {
 		}
 	}
 	
-	public void changeView(ViewType viewType) {
+	public void changeViewTo(ViewType viewType) {
 		try {
 			if (!views.containsKey(viewType)) {
-				URL loginViewUrl = getClass().getResource(viewType.getPath());
-				Parent loginView = FXMLLoader.load(loginViewUrl);
-				Scene scene = new Scene(loginView);
-				scene.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-					
-					@Override
-					public void handle(KeyEvent t) {
-						if (t.getCode() == KeyCode.ESCAPE) {
-							Main.close();
-						}
-					}
-				});
-				views.put(viewType, scene);
+				createView(viewType);
 			}
 			currentStage.setScene(views.get(viewType));
 		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public Parent getNode(ViewType viewType, Initializable root) {
+		try {
+			if (!views.containsKey(viewType)) {
+				createView(viewType, root);
+			}
+			Parent node = views.get(viewType).getRoot();
+			return node;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	private void createView(ViewType viewType) throws IOException {
+		createView(viewType, null);
+	}
+	
+	private void createView(ViewType viewType, Initializable root) throws IOException {
+		URL viewUrl = getClass().getResource(viewType.getPath());
+		FXMLLoader loader = new FXMLLoader(viewUrl);
+		if (root != null) {
+			loader.setRoot(root);
+			loader.setController(root);
+		}
+		Parent view = loader.load();
+		Scene scene = new Scene(view);
+		scene.addEventHandler(KeyEvent.KEY_PRESSED, t -> {
+			if (t.getCode() == KeyCode.ESCAPE) {
+				Main.close();
+			}
+		});
+		views.put(viewType, scene);
 	}
 }

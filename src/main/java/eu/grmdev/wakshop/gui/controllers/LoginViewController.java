@@ -30,7 +30,7 @@ public class LoginViewController implements Initializable {
 			}
 			else {
 				System.out.println("Sign in");
-				GuiApp.getInstance().changeView(ViewType.MAIN);
+				GuiApp.getInstance().changeViewTo(ViewType.MAIN);
 			}
 		}
 		else {
