@@ -18,7 +18,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
-public class MainViewController implements Focusable {
+public class MainController implements Focusable {
 	@FXML
 	private BorderPane borderPane;
 	@FXML

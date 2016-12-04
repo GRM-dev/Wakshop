@@ -11,7 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 
-public class MenuViewController extends BorderPane implements Focusable {
+public class MenuController extends BorderPane implements Focusable {
 	@FXML
 	private Button manageButton;
 	
