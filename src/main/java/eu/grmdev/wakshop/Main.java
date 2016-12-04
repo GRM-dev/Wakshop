@@ -25,6 +25,7 @@ public class Main {
 				}
 			});
 			Wakshop.getInstance().getDatabase().close();
+			Wakshop.getInstance().closeConnections();
 		});
 		t.setName("Closing thread");
 		t.start();

@@ -32,23 +32,36 @@ public class Wakshop implements IWakshop {
 	@Override
 	public void startServer(int port) throws Exception {
 		if (wakNetHandler != null) {
-			closeConnection();
+			closeConnections();
 		}
-		wakNetHandler = new WakNetHandler(port);
+		try {
+			wakNetHandler = new WakNetHandler(port);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			Messages.showExceptionDialog(e, "Problem while starting server");
+		}
 	}
 	
 	@Override
 	public void connectToServer(String host, int port) {
-		try {
-			wakNetHandler = new WakNetHandler(host, port);
+		if (wakNetHandler != null) {
+			closeConnections();
 		}
-		catch (Exception e) {
-			e.printStackTrace();
-			Messages.showExceptionDialog(e, "Could not create server!");
-		}
+		Thread t = new Thread(() -> {
+			try {
+				wakNetHandler = new WakNetHandler(host, port);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				Messages.showExceptionDialog(e, "Could not create server!");
+			}
+		});
+		t.start();
 	}
 	
-	private void closeConnection() {
+	@Override
+	public void closeConnections() {
 		wakNetHandler.close();
 		wakNetHandler = null;
 	}

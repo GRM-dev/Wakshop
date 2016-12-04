@@ -14,4 +14,6 @@ public interface IWakshop {
 	void startServer(int port) throws Exception;
 	
 	void connectToServer(String host, int port);
+
+	void closeConnections();
 }

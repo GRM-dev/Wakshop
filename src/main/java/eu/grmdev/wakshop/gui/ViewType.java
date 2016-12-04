@@ -14,7 +14,8 @@ public enum ViewType {
 	SETTINGS("/views/SettingsView.fxml",SettingsController.class) ,
 	WORKSHOP_MANAGE("/views/WorkshopManageView.fxml",WorkshopManageController.class) ,
 	WORKSHOP_CREATE("/views/WorkshopCreateView.fxml",WorkshopCreateController.class) ,
-	WORKSHOP_JOIN("/views/WorkshopJoinView.fxml",WorkshopJoinController.class);
+	WORKSHOP_JOIN("/views/WorkshopJoinView.fxml",WorkshopJoinController.class) ,
+	WORKSHOP_MAIN("/views/workshops/WorkshopMainView.fxml");
 	
 	@Getter
 	private String path;
