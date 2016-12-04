@@ -32,30 +32,33 @@ public class WorkshopCreateController extends BorderPane implements Focusable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		wakshop = Main.getWakshop();
-		List<String> workshops = wakshop.getWorkshopApi().getAllWorkshopsTitles();
-		ObservableList<String> ws = FXCollections.observableArrayList(workshops);
-		comboBox.setItems(ws);
 		comboBox.setTooltip(new Tooltip("Select workshop to start"));
 		comboBox.getSelectionModel().selectedItemProperty().addListener(e -> {
 			comboBox_Selected(e);
 		});
-		tfPort.setText("8081");
 		tfSessionName.addEventHandler(KeyEvent.KEY_RELEASED, e -> {
 			changeStartButtonState();
 		});
 		tfPort.addEventHandler(KeyEvent.KEY_RELEASED, e -> {
 			changeStartButtonState();
 		});
+		tfPort.setText(wakshop.getConfigApi().getConfig().getDefaultPort() + "");
 	}
 	
 	@Override
 	public void onFocus(Object requestingObject) {
-		
+		List<String> workshops = wakshop.getWorkshopApi().getAllWorkshopsTitles();
+		ObservableList<String> ws = FXCollections.observableArrayList(workshops);
+		comboBox.setItems(ws);
 	}
 	
 	private void comboBox_Selected(Observable e) {
 		ReadOnlyObjectProperty<?> p = (ReadOnlyObjectProperty<?>) e;
-		System.out.println(p.getValue());
+		String v = (String) p.getValue();
+		if (v != null && tfSessionName.getText().trim().length() == 0) {
+			tfSessionName.setText(v);
+		}
+		System.out.println("Selected: " + v);
 		changeStartButtonState();
 	}
 	
@@ -66,14 +69,16 @@ public class WorkshopCreateController extends BorderPane implements Focusable {
 			boolean sessionCorrect = s != null && s.length() > 0;
 			boolean portCorrect = p != null && p.length() > 0 && Integer.parseInt(p) > 0;
 			boolean selectCorrect = comboBox.getSelectionModel().getSelectedIndex() >= 0;
-			if (sessionCorrect && portCorrect && selectCorrect && startBtn.isDisabled()) {
-				startBtn.setDisable(false);
+			if (sessionCorrect && portCorrect && selectCorrect) {
+				if (startBtn.isDisabled()) {
+					startBtn.setDisable(false);
+				}
 			}
 			else if (!startBtn.isDisabled()) {
 				startBtn.setDisable(true);
 			}
 		}
-		catch (Exception e) {
+		catch (NumberFormatException e) {
 			if (!startBtn.isDisabled()) {
 				startBtn.setDisable(true);
 			}

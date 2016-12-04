@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 
 public class SettingsController extends BorderPane implements Focusable {
@@ -21,6 +22,8 @@ public class SettingsController extends BorderPane implements Focusable {
 	private Label lblSaveDirPath, lblMsg;
 	@FXML
 	private CheckBox cbSaveName;
+	@FXML
+	private TextField tfDefaultPort;
 	private Config config;
 	private Wakshop wakshop;
 	
@@ -30,6 +33,7 @@ public class SettingsController extends BorderPane implements Focusable {
 		this.config = wakshop.getConfigApi().getConfig();
 		lblSaveDirPath.setText(config.getSaveDirPath());
 		cbSaveName.setSelected(config.isSaveName());
+		tfDefaultPort.setText(config.getDefaultPort() + "");
 	}
 	
 	@Override
@@ -51,9 +55,19 @@ public class SettingsController extends BorderPane implements Focusable {
 	
 	@FXML
 	private void saveButton_Click(ActionEvent e) {
+		int port = 0;
+		try {
+			port = Integer.parseInt(tfDefaultPort.getText());
+			if (port <= 0) { throw new NumberFormatException("Port is 0 or less! " + tfDefaultPort.getText()); }
+		}
+		catch (NumberFormatException ex) {
+			Messages.showExceptionDialog(ex, "Wrong port! " + tfDefaultPort.getText());
+			return;
+		}
 		System.out.println("Save");
 		config.setSaveDirPath(lblSaveDirPath.getText());
 		config.setSaveName(cbSaveName.isSelected());
+		config.setDefaultPort(port);
 		wakshop.getConfigApi().save(config);
 	}
 	
