@@ -8,9 +8,7 @@ import java.util.Map;
 import com.guigarage.flatterfx.FlatterFX;
 
 import eu.grmdev.wakshop.Main;
-import eu.grmdev.wakshop.core.IWakshop;
-import eu.grmdev.wakshop.core.Wakshop;
-import eu.grmdev.wakshop.gui.controllers.MainViewController;
+import eu.grmdev.wakshop.gui.controllers.MainController;
 import eu.grmdev.wakshop.utils.Focusable;
 import eu.grmdev.wakshop.utils.Messages;
 import javafx.application.Application;
@@ -26,14 +24,12 @@ import lombok.Getter;
 
 public class GuiApp extends Application {
 	@Getter
-	private IWakshop wakshop;
-	@Getter
 	private Stage currentStage;
 	private static boolean started;
 	@Getter
 	private static GuiApp instance;
 	@Getter
-	private static MainViewController mainViewInstance;
+	private static MainController mainViewInstance;
 	private static Map<ViewType, Scene> views;
 	@Getter
 	private static Image icon;
@@ -44,7 +40,6 @@ public class GuiApp extends Application {
 		instance = this;
 		currentStage = primaryStage;
 		views = new HashMap<>();
-		wakshop = new Wakshop();
 		currentStage.setOnCloseRequest(event -> {
 			Main.close();
 		});
@@ -120,7 +115,7 @@ public class GuiApp extends Application {
 		views.put(viewType, scene);
 	}
 	
-	public static void setMainViewController(MainViewController controller) {
+	public static void setMainViewController(MainController controller) {
 		if (controller != null && mainViewInstance == null) {
 			mainViewInstance = controller;
 		}
