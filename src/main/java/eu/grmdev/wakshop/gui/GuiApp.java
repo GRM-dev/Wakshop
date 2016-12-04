@@ -25,6 +25,7 @@ import javafx.stage.WindowEvent;
 import lombok.Getter;
 
 public class GuiApp extends Application {
+	@Getter
 	private IWakshop wakshop;
 	@Getter
 	private Stage currentStage;
@@ -34,6 +35,8 @@ public class GuiApp extends Application {
 	@Getter
 	private static MainViewController mainViewInstance;
 	private static Map<ViewType, Scene> views;
+	@Getter
+	private static Image icon;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -46,7 +49,8 @@ public class GuiApp extends Application {
 			Main.close();
 		});
 		currentStage.setTitle("Wakshop - Manage your workshops freely");
-		currentStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo_s.png")));
+		icon = new Image(getClass().getResourceAsStream("/images/logo_s.png"));
+		currentStage.getIcons().add(icon);
 		currentStage.setMinHeight(400);
 		currentStage.setMinWidth(480);
 		changeViewTo(ViewType.LOGIN);
@@ -95,6 +99,7 @@ public class GuiApp extends Application {
 	
 	private static void createView(ViewType viewType, Focusable root) throws IOException {
 		URL viewUrl = GuiApp.class.getResource(viewType.getPath());
+		if (viewUrl == null) { throw new IOException("Can't find file: " + viewType.getPath()); }
 		FXMLLoader loader = new FXMLLoader(viewUrl);
 		if (root != null) {
 			loader.setRoot(root);

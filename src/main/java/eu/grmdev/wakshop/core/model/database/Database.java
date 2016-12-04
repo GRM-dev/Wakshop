@@ -29,4 +29,8 @@ public class Database {
 		hib.hibernateProperties(props);
 		hib.build();
 	}
+	
+	public void close() {
+		Fluent.factory().close();
+	}
 }

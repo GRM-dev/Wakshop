@@ -3,6 +3,8 @@ package eu.grmdev.wakshop.gui.controllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import eu.grmdev.wakshop.gui.GuiApp;
+import eu.grmdev.wakshop.gui.ViewType;
 import eu.grmdev.wakshop.utils.Focusable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,6 +23,7 @@ public class MenuViewController extends BorderPane implements Focusable {
 	@FXML
 	private void manageButton_Click(ActionEvent e) {
 		System.out.println("Manage");
+		GuiApp.getMainViewInstance().changeViewTo(ViewType.WORKSHOP_MANAGE);
 	}
 	
 	@FXML

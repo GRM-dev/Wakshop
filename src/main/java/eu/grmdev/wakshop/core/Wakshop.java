@@ -1,9 +1,10 @@
 package eu.grmdev.wakshop.core;
 
 import eu.grmdev.wakshop.core.model.database.Database;
+import lombok.Getter;
 
 public class Wakshop implements IWakshop {
-	
+	@Getter
 	private Database database;
 	
 	public Wakshop() {
@@ -14,4 +15,5 @@ public class Wakshop implements IWakshop {
 			e.printStackTrace();
 		}
 	}
+	
 }
