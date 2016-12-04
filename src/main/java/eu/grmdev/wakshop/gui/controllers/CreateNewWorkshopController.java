@@ -3,7 +3,7 @@ package eu.grmdev.wakshop.gui.controllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import eu.grmdev.wakshop.Main;
+import eu.grmdev.wakshop.core.IWakshop;
 import eu.grmdev.wakshop.core.Wakshop;
 import eu.grmdev.wakshop.core.model.Workshop;
 import javafx.event.ActionEvent;
@@ -20,11 +20,11 @@ public class CreateNewWorkshopController implements Initializable {
 	private CheckBox cbChatEnabled, cbFileTransferEnabled;
 	@FXML
 	private Label lblMsg;
-	private Wakshop wakshop;
+	private IWakshop wakshop;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		wakshop = Main.getWakshop();
+		wakshop = Wakshop.getInstance();
 		tfTitle.requestFocus();
 	}
 	

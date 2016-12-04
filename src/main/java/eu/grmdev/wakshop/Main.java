@@ -3,15 +3,15 @@ package eu.grmdev.wakshop;
 import eu.grmdev.wakshop.core.Wakshop;
 import eu.grmdev.wakshop.gui.GuiApp;
 import javafx.application.Platform;
-import lombok.Getter;
 
 public class Main {
-	@Getter
-	private static Wakshop wakshop;
 	
 	public static void main(String[] args) {
 		System.out.println("Welcome to Wakshop!");
-		wakshop = new Wakshop();
+		new Thread(() -> {
+			Wakshop.getInstance();
+			System.out.println("Core created");
+		}).start();;
 		GuiApp.run();
 		System.out.println("Window created");
 	}
@@ -24,7 +24,7 @@ public class Main {
 					gui.getCurrentStage().close();
 				}
 			});
-			wakshop.getDatabase().close();
+			Wakshop.getInstance().getDatabase().close();
 		});
 		t.setName("Closing thread");
 		t.start();

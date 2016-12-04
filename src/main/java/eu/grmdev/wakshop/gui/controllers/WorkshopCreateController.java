@@ -4,9 +4,10 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import eu.grmdev.wakshop.Main;
+import eu.grmdev.wakshop.core.IWakshop;
 import eu.grmdev.wakshop.core.Wakshop;
 import eu.grmdev.wakshop.utils.Focusable;
+import eu.grmdev.wakshop.utils.Messages;
 import javafx.beans.Observable;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.FXCollections;
@@ -27,11 +28,11 @@ public class WorkshopCreateController extends BorderPane implements Focusable {
 	private TextField tfSessionName, tfPort;
 	@FXML
 	private Button startBtn;
-	private Wakshop wakshop;
+	private IWakshop wakshop;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		wakshop = Main.getWakshop();
+		wakshop = Wakshop.getInstance();
 		comboBox.setTooltip(new Tooltip("Select workshop to start"));
 		comboBox.getSelectionModel().selectedItemProperty().addListener(e -> {
 			comboBox_Selected(e);
@@ -88,6 +89,13 @@ public class WorkshopCreateController extends BorderPane implements Focusable {
 	@FXML
 	private void startButton_Click(ActionEvent e) {
 		System.out.println("Start Workshop");
-		
+		try {
+			wakshop.startServer(Integer.parseInt(tfPort.getText()));
+			System.out.println("After Connnection Establishment");
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			Messages.showExceptionDialog(ex, "Could not create server!");
+		}
 	}
 }

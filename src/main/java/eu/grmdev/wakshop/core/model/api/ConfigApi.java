@@ -1,4 +1,4 @@
-package eu.grmdev.wakshop.core.api;
+package eu.grmdev.wakshop.core.model.api;
 
 import com.github.fluent.hibernate.H;
 

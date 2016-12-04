@@ -3,7 +3,7 @@ package eu.grmdev.wakshop.gui.controllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import eu.grmdev.wakshop.Main;
+import eu.grmdev.wakshop.core.IWakshop;
 import eu.grmdev.wakshop.core.Wakshop;
 import eu.grmdev.wakshop.utils.Focusable;
 import eu.grmdev.wakshop.utils.Messages;
@@ -13,13 +13,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 
 public class WorkshopJoinController extends BorderPane implements Focusable {
-	private Wakshop wakshop;
+	private IWakshop wakshop;
 	@FXML
 	private TextField tfHost, tfPort;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		wakshop = Main.getWakshop();
+		wakshop = Wakshop.getInstance();
 		
 	}
 	
@@ -42,7 +42,14 @@ public class WorkshopJoinController extends BorderPane implements Focusable {
 			return;
 		}
 		if (hostS.length() > 0 && port > 0) {
-			// TODO: RMI connection
+			try {
+				wakshop.connectToServer(hostS, port);
+				System.out.println("Connected");
+			}
+			catch (Exception ex) {
+				ex.printStackTrace();
+				Messages.showExceptionDialog(ex, "Could not connect to server!");
+			}
 		}
 		else {
 			Messages.showWarningDialog("Wrong input", "Wrong/Empty host and/or port");

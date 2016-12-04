@@ -5,7 +5,7 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import eu.grmdev.wakshop.Main;
+import eu.grmdev.wakshop.core.Wakshop;
 import eu.grmdev.wakshop.core.model.Workshop;
 import eu.grmdev.wakshop.gui.GuiApp;
 import eu.grmdev.wakshop.gui.controllers.WorkshopManageController;
@@ -64,7 +64,7 @@ public class WorkshopDetailsController extends GridPane implements Focusable {
 		workshop.setTitle(tfTitle.getText());
 		workshop.setChatEnabled(cbChat.isSelected());
 		workshop.setFileTransferEnabled(cbFile.isSelected());
-		workshop = Main.getWakshop().getWorkshopApi().save(workshop);
+		workshop = Wakshop.getInstance().getWorkshopApi().save(workshop);
 		parentPane.setText(workshop.getTitle());
 	}
 	
@@ -73,7 +73,7 @@ public class WorkshopDetailsController extends GridPane implements Focusable {
 		System.out.println("Workshop - Remove: " + workshop.getTitle());
 		Optional<ButtonType> dialog = Messages.showConfirmationDialog("Workshops", "Removing workshops: " + workshop.getTitle(), "Are you sure to remove this workshops?", ButtonType.YES, ButtonType.NO);
 		if (dialog.isPresent() && dialog.get() == ButtonType.YES) {
-			Main.getWakshop().getWorkshopApi().remove(workshop);
+			Wakshop.getInstance().getWorkshopApi().remove(workshop);
 			this.controller.removeWorkshop(workshop);
 		}
 	}

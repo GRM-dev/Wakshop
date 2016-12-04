@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import eu.grmdev.wakshop.core.IWakshop;
 import eu.grmdev.wakshop.core.Wakshop;
 import eu.grmdev.wakshop.core.model.Config;
 import eu.grmdev.wakshop.utils.Focusable;
@@ -25,7 +26,7 @@ public class SettingsController extends BorderPane implements Focusable {
 	@FXML
 	private TextField tfDefaultPort;
 	private Config config;
-	private Wakshop wakshop;
+	private IWakshop wakshop;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {

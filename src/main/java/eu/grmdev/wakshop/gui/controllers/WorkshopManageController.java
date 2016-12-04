@@ -10,7 +10,7 @@ import java.util.ResourceBundle;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import eu.grmdev.wakshop.Main;
+import eu.grmdev.wakshop.core.IWakshop;
 import eu.grmdev.wakshop.core.Wakshop;
 import eu.grmdev.wakshop.core.model.Workshop;
 import eu.grmdev.wakshop.gui.GuiApp;
@@ -34,12 +34,12 @@ public class WorkshopManageController extends BorderPane implements Focusable {
 	private Map<Integer, Pair<Workshop, TitledPane>> workshops;
 	private static WorkshopManageController instance;
 	private Stage newWorkshopsStage;
-	private Wakshop wakshop;
+	private IWakshop wakshop;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		instance = this;
-		wakshop = Main.getWakshop();
+		wakshop = Wakshop.getInstance();
 		workshops = new HashMap<>();
 		reloadWorkshops();
 	}
