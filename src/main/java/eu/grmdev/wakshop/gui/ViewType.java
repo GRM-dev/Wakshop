@@ -2,6 +2,8 @@ package eu.grmdev.wakshop.gui;
 
 import eu.grmdev.wakshop.gui.controllers.MenuController;
 import eu.grmdev.wakshop.gui.controllers.SettingsController;
+import eu.grmdev.wakshop.gui.controllers.WorkshopCreateController;
+import eu.grmdev.wakshop.gui.controllers.WorkshopJoinController;
 import eu.grmdev.wakshop.gui.controllers.WorkshopManageController;
 import lombok.Getter;
 
@@ -10,7 +12,9 @@ public enum ViewType {
 	MAIN("/views/MainView.fxml") ,
 	MENU("/views/MenuView.fxml",MenuController.class) ,
 	SETTINGS("/views/SettingsView.fxml",SettingsController.class) ,
-	WORKSHOP_MANAGE("/views/WorkshopManageView.fxml",WorkshopManageController.class);
+	WORKSHOP_MANAGE("/views/WorkshopManageView.fxml",WorkshopManageController.class) ,
+	WORKSHOP_CREATE("/views/WorkshopCreateView.fxml",WorkshopCreateController.class) ,
+	WORKSHOP_JOIN("/views/WorkshopJoinView.fxml",WorkshopJoinController.class);
 	
 	@Getter
 	private String path;

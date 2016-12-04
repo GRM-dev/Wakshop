@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root type="BorderPane" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <VBox alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER">
+               <children>
+                  <TextField fx:id="tfSessionName" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="400.0" promptText="Session Name" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER">
+               <children>
+                  <TextField fx:id="tfPort" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="400.0" promptText="Port" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </center>
+   <right>
+      <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="startBtn" disable="true" mnemonicParsing="false" onAction="#startButton_Click" text="Start Workshops -&gt;" />
+         </children>
+         <BorderPane.margin>
+            <Insets left="15.0" right="15.0" />
+         </BorderPane.margin>
+      </HBox>
+   </right>
+   <left>
+      <VBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
+         <children>
+            <ChoiceBox fx:id="comboBox" prefWidth="180.0" />
+         </children>
+      </VBox>
+   </left>
+</fx:root>

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.guigarage.flatterfx.FlatterFX;
+import com.guigarage.flatterfx.overlay.DefaultOverlay;
 
 import eu.grmdev.wakshop.Main;
 import eu.grmdev.wakshop.gui.controllers.MainController;
@@ -59,17 +60,22 @@ public class GuiApp extends Application {
 		}
 	}
 	
-	public void changeViewTo(ViewType viewType) {
+	public Scene changeViewTo(ViewType viewType) {
 		try {
+			Scene view;
 			if (!views.containsKey(viewType)) {
-				createView(viewType);
+				view = createView(viewType);
 			}
-			Scene view = views.get(viewType);
+			else {
+				view = views.get(viewType);
+			}
 			currentStage.setScene(view);
+			return view;
 		}
 		catch (IOException e) {
 			e.printStackTrace();
 			Messages.showExceptionDialog(e, "Changing View to: " + viewType.name() + " has failed");
+			return null;
 		}
 	}
 	
@@ -88,11 +94,11 @@ public class GuiApp extends Application {
 		}
 	}
 	
-	private static void createView(ViewType viewType) throws IOException {
-		createView(viewType, null);
+	private static Scene createView(ViewType viewType) throws IOException {
+		return createView(viewType, null);
 	}
 	
-	private static void createView(ViewType viewType, Focusable root) throws IOException {
+	private static Scene createView(ViewType viewType, Focusable root) throws IOException {
 		URL viewUrl = GuiApp.class.getResource(viewType.getPath());
 		if (viewUrl == null) { throw new IOException("Can't find file: " + viewType.getPath()); }
 		FXMLLoader loader = new FXMLLoader(viewUrl);
@@ -107,12 +113,17 @@ public class GuiApp extends Application {
 				root.onFocus(e);
 			});
 		}
+		if (viewType == ViewType.MAIN) {
+			DefaultOverlay overlay = new DefaultOverlay();
+			FlatterFX.getInstance().setOverlayLayerForScene(scene, overlay);
+		}
 		scene.addEventHandler(KeyEvent.KEY_PRESSED, t -> {
 			if (t.getCode() == KeyCode.ESCAPE) {
 				Main.close();
 			}
 		});
 		views.put(viewType, scene);
+		return scene;
 	}
 	
 	public static void setMainViewController(MainController controller) {

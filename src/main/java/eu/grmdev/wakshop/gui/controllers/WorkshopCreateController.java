@@ -1,0 +1,88 @@
+package eu.grmdev.wakshop.gui.controllers;
+
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import eu.grmdev.wakshop.Main;
+import eu.grmdev.wakshop.core.Wakshop;
+import eu.grmdev.wakshop.utils.Focusable;
+import javafx.beans.Observable;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
+
+public class WorkshopCreateController extends BorderPane implements Focusable {
+	@FXML
+	private ChoiceBox<String> comboBox;
+	@FXML
+	private TextField tfSessionName, tfPort;
+	@FXML
+	private Button startBtn;
+	private Wakshop wakshop;
+	
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		wakshop = Main.getWakshop();
+		List<String> workshops = wakshop.getWorkshopApi().getAllWorkshopsTitles();
+		ObservableList<String> ws = FXCollections.observableArrayList(workshops);
+		comboBox.setItems(ws);
+		comboBox.setTooltip(new Tooltip("Select workshop to start"));
+		comboBox.getSelectionModel().selectedItemProperty().addListener(e -> {
+			comboBox_Selected(e);
+		});
+		tfPort.setText("8081");
+		tfSessionName.addEventHandler(KeyEvent.KEY_RELEASED, e -> {
+			changeStartButtonState();
+		});
+		tfPort.addEventHandler(KeyEvent.KEY_RELEASED, e -> {
+			changeStartButtonState();
+		});
+	}
+	
+	@Override
+	public void onFocus(Object requestingObject) {
+		
+	}
+	
+	private void comboBox_Selected(Observable e) {
+		ReadOnlyObjectProperty<?> p = (ReadOnlyObjectProperty<?>) e;
+		System.out.println(p.getValue());
+		changeStartButtonState();
+	}
+	
+	private void changeStartButtonState() {
+		try {
+			String s = tfSessionName.getText();
+			String p = tfPort.getText();
+			boolean sessionCorrect = s != null && s.length() > 0;
+			boolean portCorrect = p != null && p.length() > 0 && Integer.parseInt(p) > 0;
+			boolean selectCorrect = comboBox.getSelectionModel().getSelectedIndex() >= 0;
+			if (sessionCorrect && portCorrect && selectCorrect && startBtn.isDisabled()) {
+				startBtn.setDisable(false);
+			}
+			else if (!startBtn.isDisabled()) {
+				startBtn.setDisable(true);
+			}
+		}
+		catch (Exception e) {
+			if (!startBtn.isDisabled()) {
+				startBtn.setDisable(true);
+			}
+		}
+	}
+	
+	@FXML
+	private void startButton_Click(ActionEvent e) {
+		System.out.println("Start Workshop");
+		
+	}
+}

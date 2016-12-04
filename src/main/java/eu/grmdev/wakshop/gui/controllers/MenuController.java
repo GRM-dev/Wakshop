@@ -29,11 +29,13 @@ public class MenuController extends BorderPane implements Focusable {
 	@FXML
 	private void createButton_Click(ActionEvent e) {
 		System.out.println("Create");
+		GuiApp.getMainViewInstance().changeViewTo(ViewType.WORKSHOP_CREATE);
 	}
 	
 	@FXML
 	private void joinButton_Click(ActionEvent e) {
 		System.out.println("Join");
+		GuiApp.getMainViewInstance().changeViewTo(ViewType.WORKSHOP_JOIN);
 	}
 	
 	@Override

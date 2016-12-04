@@ -1,5 +1,6 @@
 package eu.grmdev.wakshop.core.api;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,5 +37,14 @@ public class WorkshopApi {
 	
 	public void remove(Workshop workshop) {
 		H.delete(workshop);
+	}
+	
+	public List<String> getAllWorkshopsTitles() {
+		List<Object> list = H.request(Workshop.class).list();
+		List<String> l = new ArrayList<>();
+		for (Object object : list) {
+			l.add(((Workshop) object).getTitle());
+		}
+		return l;
 	}
 }
