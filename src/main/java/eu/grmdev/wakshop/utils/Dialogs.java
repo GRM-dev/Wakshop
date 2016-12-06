@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import eu.grmdev.wakshop.gui.GuiApp;
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
@@ -18,15 +19,19 @@ import javafx.scene.layout.Priority;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
-public class Messages {
+public class Dialogs {
 	public static void showInformationDialog(String header, String content) {
-		Alert alert = createAlert("Warning", header, content, AlertType.INFORMATION);
-		alert.showAndWait();
+		runInFxThread(() -> {
+			Alert alert = createAlert("Warning", header, content, AlertType.INFORMATION);
+			alert.showAndWait();
+		});
 	}
 	
 	public static void showWarningDialog(String header, String content) {
-		Alert alert = createAlert("Warning", header, content, AlertType.WARNING);
-		alert.showAndWait();
+		runInFxThread(() -> {
+			Alert alert = createAlert("Warning", header, content, AlertType.WARNING);
+			alert.showAndWait();
+		});
 	}
 	
 	public static void showExceptionDialog(Exception ex, String... additionalInfo) {
@@ -35,24 +40,35 @@ public class Messages {
 		ex.printStackTrace(pw);
 		String exceptionText = sw.toString();
 		
-		Label label = new Label("The exception stacktrace:");
-		
-		TextArea textArea = new TextArea(exceptionText);
-		textArea.setEditable(false);
-		textArea.setWrapText(true);
-		
-		textArea.setMaxWidth(Double.MAX_VALUE);
-		textArea.setMaxHeight(Double.MAX_VALUE);
-		GridPane.setVgrow(textArea, Priority.ALWAYS);
-		GridPane.setHgrow(textArea, Priority.ALWAYS);
-		
-		GridPane expContent = new GridPane();
-		expContent.setMaxWidth(Double.MAX_VALUE);
-		expContent.add(label, 0, 0);
-		expContent.add(textArea, 0, 1);
-		Alert alert = createAlert("Exception", "There was an Exception while processing request", String.join("\r\n", additionalInfo), AlertType.ERROR);
-		alert.getDialogPane().setExpandableContent(expContent);
-		alert.showAndWait();
+		runInFxThread(() -> {
+			Label label = new Label("The exception stacktrace:");
+			
+			TextArea textArea = new TextArea(exceptionText);
+			textArea.setEditable(false);
+			textArea.setWrapText(true);
+			
+			textArea.setMaxWidth(Double.MAX_VALUE);
+			textArea.setMaxHeight(Double.MAX_VALUE);
+			GridPane.setVgrow(textArea, Priority.ALWAYS);
+			GridPane.setHgrow(textArea, Priority.ALWAYS);
+			
+			GridPane expContent = new GridPane();
+			expContent.setMaxWidth(Double.MAX_VALUE);
+			expContent.add(label, 0, 0);
+			expContent.add(textArea, 0, 1);
+			Alert alert = createAlert("Exception", "There was an Exception while processing request", String.join("\r\n", additionalInfo), AlertType.ERROR);
+			alert.getDialogPane().setExpandableContent(expContent);
+			alert.showAndWait();
+		});
+	}
+	
+	private static void runInFxThread(Runnable r) {
+		if (Platform.isFxApplicationThread()) {
+			r.run();
+		}
+		else {
+			Platform.runLater(r);
+		}
 	}
 	
 	public static Optional<ButtonType> showConfirmationDialog(String title, String header, String content) {

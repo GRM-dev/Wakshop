@@ -9,7 +9,7 @@ import eu.grmdev.wakshop.Main;
 import eu.grmdev.wakshop.gui.GuiApp;
 import eu.grmdev.wakshop.gui.ViewType;
 import eu.grmdev.wakshop.utils.Focusable;
-import eu.grmdev.wakshop.utils.Messages;
+import eu.grmdev.wakshop.utils.Dialogs;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -55,11 +55,11 @@ public class MainController implements Focusable {
 		}
 		catch (InstantiationException e) {
 			e.printStackTrace();
-			Messages.showExceptionDialog(e);
+			Dialogs.showExceptionDialog(e);
 		}
 		catch (IllegalAccessException e) {
 			e.printStackTrace();
-			Messages.showExceptionDialog(e);
+			Dialogs.showExceptionDialog(e);
 		}
 	}
 	

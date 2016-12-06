@@ -7,4 +7,6 @@ public interface WakConnection extends Remote {
 	
 	void requestClose() throws RemoteException;
 	
+	Server getServer(Client client) throws RemoteException;
+	
 }

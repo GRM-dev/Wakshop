@@ -9,7 +9,7 @@ import eu.grmdev.wakshop.core.Wakshop;
 import eu.grmdev.wakshop.gui.GuiApp;
 import eu.grmdev.wakshop.gui.ViewType;
 import eu.grmdev.wakshop.utils.Focusable;
-import eu.grmdev.wakshop.utils.Messages;
+import eu.grmdev.wakshop.utils.Dialogs;
 import javafx.beans.Observable;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.FXCollections;
@@ -98,7 +98,7 @@ public class WorkshopCreateController extends BorderPane implements Focusable {
 			}
 			catch (Exception ex) {
 				ex.printStackTrace();
-				Messages.showExceptionDialog(ex, "Could not create server!");
+				Dialogs.showExceptionDialog(ex, "Could not create server!");
 			}
 		});
 		t.start();

@@ -1,54 +1,49 @@
 package eu.grmdev.wakshop.core.net;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
-
 public class WakNetHandler {
-	private Registry registry;
-	private WakConnection wakConnection;
-	private InetAddress myHost;
-	private String label = "wakConnector";
+	private ConnectionComponent connectionComponent;
+	private Server server;
+	private Client client;
+	private Thread runningThread;
 	
-	private WakNetHandler() throws UnknownHostException {
-		myHost = InetAddress.getLocalHost();
+	private WakNetHandler() {
+		
 	}
 	
 	public WakNetHandler(int port) throws Exception {
 		this();
-		registry = LocateRegistry.createRegistry(port);
-		wakConnection = new WakConnectionImpl(port);
-		registry.bind(label, wakConnection);
-		System.out.println("Server " + myHost.getHostName() + " listening on: " + myHost.getHostAddress() + ":" + port);
+		connectionComponent = ConnectionComponent.SERVER;
+		server = Server.createInstance(port);
+		runningThread = new Thread(server);
 	}
 	
 	public WakNetHandler(String host, int port) throws Exception {
 		this();
-		registry = LocateRegistry.getRegistry(host, port);
-		wakConnection = (WakConnection) registry.lookup(label);
-		System.out.println("Server " + myHost.getHostName() + " listening on: " + host + ":" + port);
+		connectionComponent = ConnectionComponent.CLIENT;
+		client = Client.createClient(host, port);
+		runningThread = new Thread(client);
 	}
 	
-	public void close() {
-		if (registry != null) {
-			try {
-				registry.unbind(label);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
+	public void startThread() {
+		if (!runningThread.isAlive()) {
+			runningThread.start();
 		}
-		if (wakConnection != null) {
-			try {
-				wakConnection.requestClose();
-				UnicastRemoteObject.unexportObject(wakConnection, true);
-			}
-			catch (RemoteException e) {
-				e.printStackTrace();
-			}
+	}
+
+	public void close() {
+		switch (connectionComponent) {
+			case CLIENT :
+				if (client != null) {
+					client.close();
+				}
+				break;
+			case SERVER :
+				if (server != null) {
+					server.close();
+				}
+				break;
+			default :
+				break;
 		}
 	}
 }

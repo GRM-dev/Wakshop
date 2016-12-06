@@ -5,18 +5,17 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-
-<fx:root maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" type="BorderPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.60">
+<fx:root maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" type="BorderPane" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <HBox alignment="CENTER" spacing="15.0" BorderPane.alignment="CENTER">
+      <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="15.0" BorderPane.alignment="CENTER">
          <children>
-            <TextField fx:id="tfHost" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Address" />
-            <TextField fx:id="tfPort" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="70.0" promptText="Port" />
+            <TextField fx:id="tfHost" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#connectButton_Click" promptText="Address" />
+            <TextField fx:id="tfPort" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="70.0" promptText="Port" />
          </children>
       </HBox>
    </center>
    <right>
-      <HBox alignment="CENTER" spacing="15.0" BorderPane.alignment="CENTER">
+      <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="15.0" BorderPane.alignment="CENTER">
          <children>
             <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#connectButton_Click" text="Connect" />
          </children>

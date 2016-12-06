@@ -20,4 +20,10 @@ public class ConfigApi {
 	public synchronized void save(Config config) {
 		H.saveOrUpdate(config);
 	}
+	
+	public void setName(String name) {
+		Config c = getConfig();
+		c.setUsername(name);
+		H.saveOrUpdate(c);
+	}
 }

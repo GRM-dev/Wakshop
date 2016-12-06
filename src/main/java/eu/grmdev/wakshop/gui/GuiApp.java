@@ -11,7 +11,7 @@ import com.guigarage.flatterfx.overlay.DefaultOverlay;
 import eu.grmdev.wakshop.Main;
 import eu.grmdev.wakshop.gui.controllers.MainController;
 import eu.grmdev.wakshop.utils.Focusable;
-import eu.grmdev.wakshop.utils.Messages;
+import eu.grmdev.wakshop.utils.Dialogs;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -74,7 +74,7 @@ public class GuiApp extends Application {
 		}
 		catch (IOException e) {
 			e.printStackTrace();
-			Messages.showExceptionDialog(e, "Changing View to: " + viewType.name() + " has failed");
+			Dialogs.showExceptionDialog(e, "Changing View to: " + viewType.name() + " has failed");
 			return null;
 		}
 	}
@@ -89,7 +89,7 @@ public class GuiApp extends Application {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			Messages.showExceptionDialog(e, "Couldn't get node " + viewType.name());
+			Dialogs.showExceptionDialog(e, "Couldn't get node " + viewType.name());
 			return null;
 		}
 	}

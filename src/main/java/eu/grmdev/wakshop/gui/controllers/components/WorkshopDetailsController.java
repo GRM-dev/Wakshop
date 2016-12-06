@@ -10,7 +10,7 @@ import eu.grmdev.wakshop.core.model.Workshop;
 import eu.grmdev.wakshop.gui.GuiApp;
 import eu.grmdev.wakshop.gui.controllers.WorkshopManageController;
 import eu.grmdev.wakshop.utils.Focusable;
-import eu.grmdev.wakshop.utils.Messages;
+import eu.grmdev.wakshop.utils.Dialogs;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -71,7 +71,7 @@ public class WorkshopDetailsController extends GridPane implements Focusable {
 	@FXML
 	private void removeButton_Click(ActionEvent e) {
 		System.out.println("Workshop - Remove: " + workshop.getTitle());
-		Optional<ButtonType> dialog = Messages.showConfirmationDialog("Workshops", "Removing workshops: " + workshop.getTitle(), "Are you sure to remove this workshops?", ButtonType.YES, ButtonType.NO);
+		Optional<ButtonType> dialog = Dialogs.showConfirmationDialog("Workshops", "Removing workshops: " + workshop.getTitle(), "Are you sure to remove this workshops?", ButtonType.YES, ButtonType.NO);
 		if (dialog.isPresent() && dialog.get() == ButtonType.YES) {
 			Wakshop.getInstance().getWorkshopApi().remove(workshop);
 			this.controller.removeWorkshop(workshop);

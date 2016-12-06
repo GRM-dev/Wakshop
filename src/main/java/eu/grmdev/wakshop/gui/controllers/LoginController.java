@@ -3,9 +3,10 @@ package eu.grmdev.wakshop.gui.controllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import eu.grmdev.wakshop.core.Wakshop;
 import eu.grmdev.wakshop.gui.GuiApp;
 import eu.grmdev.wakshop.gui.ViewType;
-import eu.grmdev.wakshop.utils.Messages;
+import eu.grmdev.wakshop.utils.Dialogs;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,15 +27,16 @@ public class LoginController implements Initializable {
 		int l = name.length();
 		if (l > 0) {
 			if (l < 5) {
-				Messages.showWarningDialog("Wrong Username!", "Your username is to short!\nIt should be longer than 5 characters");
+				Dialogs.showWarningDialog("Wrong Username!", "Your username is to short!\nIt should be longer than 5 characters");
 			}
 			else {
 				System.out.println("Sign in");
+				Wakshop.getInstance().getConfigApi().setName(name);
 				GuiApp.getInstance().changeViewTo(ViewType.MAIN);
 			}
 		}
 		else {
-			Messages.showWarningDialog("Wrong Username!", "No username provided!");
+			Dialogs.showWarningDialog("Wrong Username!", "No username provided!");
 		}
 	}
 }

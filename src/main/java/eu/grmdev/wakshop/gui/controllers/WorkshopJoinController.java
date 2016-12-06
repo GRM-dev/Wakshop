@@ -5,8 +5,10 @@ import java.util.ResourceBundle;
 
 import eu.grmdev.wakshop.core.IWakshop;
 import eu.grmdev.wakshop.core.Wakshop;
+import eu.grmdev.wakshop.gui.GuiApp;
+import eu.grmdev.wakshop.gui.ViewType;
+import eu.grmdev.wakshop.utils.Dialogs;
 import eu.grmdev.wakshop.utils.Focusable;
-import eu.grmdev.wakshop.utils.Messages;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -20,7 +22,7 @@ public class WorkshopJoinController extends BorderPane implements Focusable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		wakshop = Wakshop.getInstance();
-		
+		tfHost.setText("localhost");
 	}
 	
 	@Override
@@ -36,23 +38,25 @@ public class WorkshopJoinController extends BorderPane implements Focusable {
 		try {
 			port = Integer.parseInt(portS);
 			if (port <= 0) { throw new NumberFormatException("Port is 0 or less! " + portS); }
+			
+			if (hostS.length() > 0 && port > 0) {
+				try {
+					wakshop.connectToServer(hostS, port);
+					System.out.println("Connected");
+					GuiApp.getInstance().changeViewTo(ViewType.WORKSHOP_MAIN);
+				}
+				catch (Exception ex) {
+					ex.printStackTrace();
+					Dialogs.showExceptionDialog(ex, "Could not connect to server!");
+				}
+			}
+			else {
+				Dialogs.showWarningDialog("Wrong input", "Wrong/Empty host and/or port");
+			}
 		}
 		catch (NumberFormatException ex) {
-			Messages.showExceptionDialog(ex, "Wrong port! " + portS);
+			Dialogs.showExceptionDialog(ex, "Wrong port! " + portS);
 			return;
-		}
-		if (hostS.length() > 0 && port > 0) {
-			try {
-				wakshop.connectToServer(hostS, port);
-				System.out.println("Connected");
-			}
-			catch (Exception ex) {
-				ex.printStackTrace();
-				Messages.showExceptionDialog(ex, "Could not connect to server!");
-			}
-		}
-		else {
-			Messages.showWarningDialog("Wrong input", "Wrong/Empty host and/or port");
 		}
 	}
 }

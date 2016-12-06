@@ -22,6 +22,8 @@ public class Config {
 	private boolean saveName;
 	@Column(name = "f_default_port", nullable = false)
 	private int defaultPort;
+	@Column(name = "f_username")
+	private String username;
 	
 	public static Config getDefaultConfig() {
 		Config c = new Config();

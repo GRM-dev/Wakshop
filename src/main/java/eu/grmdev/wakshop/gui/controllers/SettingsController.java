@@ -9,7 +9,7 @@ import eu.grmdev.wakshop.core.IWakshop;
 import eu.grmdev.wakshop.core.Wakshop;
 import eu.grmdev.wakshop.core.model.Config;
 import eu.grmdev.wakshop.utils.Focusable;
-import eu.grmdev.wakshop.utils.Messages;
+import eu.grmdev.wakshop.utils.Dialogs;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ButtonType;
@@ -45,7 +45,7 @@ public class SettingsController extends BorderPane implements Focusable {
 	@FXML
 	private void defaultsButton_Click(ActionEvent e) {
 		System.out.println("Defaults");
-		Optional<ButtonType> result = Messages.showConfirmationDialog("Confirmation", "Restore Config to default values", "Do you really want to restore default values?");
+		Optional<ButtonType> result = Dialogs.showConfirmationDialog("Confirmation", "Restore Config to default values", "Do you really want to restore default values?");
 		if (result.isPresent() && result.get() == ButtonType.OK) {
 			Config config = Config.getDefaultConfig();
 			config.setId(this.config.getId());
@@ -62,7 +62,7 @@ public class SettingsController extends BorderPane implements Focusable {
 			if (port <= 0) { throw new NumberFormatException("Port is 0 or less! " + tfDefaultPort.getText()); }
 		}
 		catch (NumberFormatException ex) {
-			Messages.showExceptionDialog(ex, "Wrong port! " + tfDefaultPort.getText());
+			Dialogs.showExceptionDialog(ex, "Wrong port! " + tfDefaultPort.getText());
 			return;
 		}
 		System.out.println("Save");
@@ -85,7 +85,7 @@ public class SettingsController extends BorderPane implements Focusable {
 		if (path == null || path.trim().length() <= 0 || !new File(path).exists()) {
 			path = null;
 		}
-		File dir = Messages.showDirectoryPicker("Select directory to save app data", path);
+		File dir = Dialogs.showDirectoryPicker("Select directory to save app data", path);
 		if (dir != null) {
 			lblSaveDirPath.setText(dir.getPath());
 		}

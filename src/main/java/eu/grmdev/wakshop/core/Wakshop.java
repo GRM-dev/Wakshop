@@ -4,7 +4,7 @@ import eu.grmdev.wakshop.core.model.api.ConfigApi;
 import eu.grmdev.wakshop.core.model.api.WorkshopApi;
 import eu.grmdev.wakshop.core.model.database.Database;
 import eu.grmdev.wakshop.core.net.WakNetHandler;
-import eu.grmdev.wakshop.utils.Messages;
+import eu.grmdev.wakshop.utils.Dialogs;
 import lombok.Getter;
 
 public class Wakshop implements IWakshop {
@@ -31,39 +31,36 @@ public class Wakshop implements IWakshop {
 	
 	@Override
 	public void startServer(int port) throws Exception {
-		if (wakNetHandler != null) {
-			closeConnections();
-		}
+		closeConnections();
 		try {
 			wakNetHandler = new WakNetHandler(port);
+			wakNetHandler.startThread();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			Messages.showExceptionDialog(e, "Problem while starting server");
+			Dialogs.showExceptionDialog(e, "Problem while starting server");
 		}
 	}
 	
 	@Override
 	public void connectToServer(String host, int port) {
-		if (wakNetHandler != null) {
-			closeConnections();
+		closeConnections();
+		try {
+			wakNetHandler = new WakNetHandler(host, port);
+			wakNetHandler.startThread();
 		}
-		Thread t = new Thread(() -> {
-			try {
-				wakNetHandler = new WakNetHandler(host, port);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-				Messages.showExceptionDialog(e, "Could not create server!");
-			}
-		});
-		t.start();
+		catch (Exception e) {
+			e.printStackTrace();
+			Dialogs.showExceptionDialog(e, "Could not create server!");
+		}
 	}
 	
 	@Override
 	public void closeConnections() {
-		wakNetHandler.close();
-		wakNetHandler = null;
+		if (wakNetHandler != null) {
+			wakNetHandler.close();
+			wakNetHandler = null;
+		}
 	}
 	
 	public static synchronized IWakshop getInstance() {

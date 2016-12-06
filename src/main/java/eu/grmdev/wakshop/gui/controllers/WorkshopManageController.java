@@ -16,7 +16,7 @@ import eu.grmdev.wakshop.core.model.Workshop;
 import eu.grmdev.wakshop.gui.GuiApp;
 import eu.grmdev.wakshop.gui.controllers.components.WorkshopDetailsController;
 import eu.grmdev.wakshop.utils.Focusable;
-import eu.grmdev.wakshop.utils.Messages;
+import eu.grmdev.wakshop.utils.Dialogs;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -62,7 +62,7 @@ public class WorkshopManageController extends BorderPane implements Focusable {
 				}
 				catch (IOException e) {
 					e.printStackTrace();
-					Messages.showExceptionDialog(e, "Cannot create Workshop pane: " + workshop.getTitle());
+					Dialogs.showExceptionDialog(e, "Cannot create Workshop pane: " + workshop.getTitle());
 				}
 			}
 		}
@@ -115,7 +115,7 @@ public class WorkshopManageController extends BorderPane implements Focusable {
 		}
 		catch (IOException e1) {
 			e1.printStackTrace();
-			Messages.showExceptionDialog(e1, "Cannot open 'New Workshops' dialog!");
+			Dialogs.showExceptionDialog(e1, "Cannot open 'New Workshops' dialog!");
 		}
 	}
 	
