@@ -1,27 +1,27 @@
 package eu.grmdev.wakshop.core.net;
 
-public class WakNetHandler {
+public class LocalNetHandler {
 	private ConnectionComponent connectionComponent;
 	private Server server;
 	private Client client;
 	private Thread runningThread;
 	
-	private WakNetHandler() {
+	private LocalNetHandler() {
 		
 	}
 	
-	public WakNetHandler(int port) throws Exception {
+	public LocalNetHandler(int port) throws Exception {
 		this();
 		connectionComponent = ConnectionComponent.SERVER;
 		server = Server.createInstance(port);
-		runningThread = new Thread(server);
+		runningThread = new Thread(server, "Server Connection Thread");
 	}
 	
-	public WakNetHandler(String host, int port) throws Exception {
+	public LocalNetHandler(String host, int port) throws Exception {
 		this();
 		connectionComponent = ConnectionComponent.CLIENT;
 		client = Client.createClient(host, port);
-		runningThread = new Thread(client);
+		runningThread = new Thread(client, "Client Connection Thread");
 	}
 	
 	public void startThread() {
@@ -29,17 +29,17 @@ public class WakNetHandler {
 			runningThread.start();
 		}
 	}
-
-	public void close() {
+	
+	public void closeNetConnection() {
 		switch (connectionComponent) {
 			case CLIENT :
 				if (client != null) {
-					client.close();
+					client.closeConnectionWithServer();
 				}
 				break;
 			case SERVER :
 				if (server != null) {
-					server.close();
+					server.closeServer();
 				}
 				break;
 			default :

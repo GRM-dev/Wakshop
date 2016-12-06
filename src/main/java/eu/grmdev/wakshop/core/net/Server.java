@@ -13,13 +13,11 @@ import java.util.Map;
 import java.util.UUID;
 
 import eu.grmdev.wakshop.utils.Dialogs;
-import lombok.Getter;
 
 public class Server implements Serializable, Runnable {
 	private static final long serialVersionUID = 1L;
 	private static Server instance;
 	private static final String LABEL = "wakConnector";
-	@Getter
 	private Map<UUID, Client> connectedClients;
 	private Registry registry;
 	private InetAddress myHost;
@@ -56,14 +54,21 @@ public class Server implements Serializable, Runnable {
 	
 	public static Server createInstance(int port) throws UnknownHostException, RemoteException {
 		if (instance != null) {
-			instance.close();
+			instance.closeServer();
 			instance = null;
 		}
 		instance = new Server(port);
 		return instance;
 	}
 	
-	public void close() {
+	public void disconnectClient(UUID id) {
+		if (connectedClients.containsKey(id)) {
+			connectedClients.get(id).closeConnectionWithServer();
+			connectedClients.remove(id);
+		}
+	}
+	
+	public void closeServer() {
 		if (registry != null) {
 			try {
 				registry.unbind(LABEL);
@@ -74,12 +79,21 @@ public class Server implements Serializable, Runnable {
 		}
 		if (wakConnection != null) {
 			try {
-				wakConnection.requestClose();
+				closeAllClientConnections();
 				UnicastRemoteObject.unexportObject(wakConnection, true);
+				registry = null;
+				wakConnection = null;
 			}
 			catch (RemoteException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	public void closeAllClientConnections() {
+		for (Client c : connectedClients.values()) {
+			c.setClosing(true);
+			c.closeConnectionWithServer();
 		}
 	}
 	

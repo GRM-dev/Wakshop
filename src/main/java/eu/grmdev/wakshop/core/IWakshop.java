@@ -15,5 +15,5 @@ public interface IWakshop {
 	
 	void connectToServer(String host, int port);
 
-	void closeConnections();
+	void closeAllNetConnections();
 }

@@ -24,8 +24,8 @@ public class Main {
 					gui.getCurrentStage().close();
 				}
 			});
+			Wakshop.getInstance().closeAllNetConnections();
 			Wakshop.getInstance().getDatabase().close();
-			Wakshop.getInstance().closeConnections();
 		});
 		t.setName("Closing thread");
 		t.start();

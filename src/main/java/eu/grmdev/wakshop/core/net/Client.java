@@ -10,6 +10,8 @@ import java.rmi.registry.Registry;
 import java.util.UUID;
 
 import eu.grmdev.wakshop.core.Wakshop;
+import eu.grmdev.wakshop.gui.GuiApp;
+import eu.grmdev.wakshop.gui.ViewType;
 import eu.grmdev.wakshop.utils.Dialogs;
 import lombok.Getter;
 
@@ -20,25 +22,28 @@ public class Client implements Serializable, Runnable {
 	private Server server;
 	private Registry registry;
 	private InetAddress myHost;
-	private WakConnection wakConnection;
+	private WakConnection wakConnector;
 	@Getter
 	private UUID id;
 	private String host;
 	private int port;
+	@Getter
+	private boolean closing;
 	
 	private Client(String host, int port) throws UnknownHostException {
 		this.host = host;
 		this.port = port;
-		myHost = InetAddress.getLocalHost();
-		id = UUID.randomUUID();
+		this.closing = false;
+		this.myHost = InetAddress.getLocalHost();
+		this.id = UUID.randomUUID();
 	}
 	
 	@Override
 	public void run() {
 		try {
 			registry = LocateRegistry.getRegistry(host, port);
-			wakConnection = (WakConnection) registry.lookup(LABEL);
-			server = wakConnection.getServer(this);
+			wakConnector = (WakConnection) registry.lookup(LABEL);
+			server = wakConnector.getServer(this);
 			System.out.println("Client " + myHost.getHostName() + " connected to: " + server.getHost() + ":" + server.getPort());
 		}
 		catch (RemoteException | NotBoundException e) {
@@ -49,26 +54,20 @@ public class Client implements Serializable, Runnable {
 	
 	public static Client createClient(String host, int port) throws UnknownHostException {
 		if (instance != null) {
-			instance.close();
+			instance.closeConnectionWithServer();
 			instance = null;
 		}
 		instance = new Client(host, port);
 		return instance;
 	}
 	
-	public void close() {
-		if (registry != null) {
+	public void closeConnectionWithServer() {
+		if (wakConnector != null) {
 			try {
-				registry.unbind(LABEL);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		if (wakConnection != null) {
-			try {
-				wakConnection.requestClose();
-				// UnicastRemoteObject.unexportObject(wakConnection, true);
+				if (!closing) {
+					closing = true;
+					wakConnector.sendDisconnectRequestToServer(this.id);
+				}
 			}
 			catch (RemoteException e) {
 				e.printStackTrace();
@@ -78,5 +77,13 @@ public class Client implements Serializable, Runnable {
 	
 	public String getUsername() {
 		return Wakshop.getInstance().getConfigApi().getConfig().getUsername();
+	}
+	
+	public void setClosing(boolean closing) {
+		this.closing = closing;
+		if (closing) {
+			GuiApp.getInstance().changeViewTo(ViewType.WORKSHOP_JOIN);
+			Dialogs.showInformationDialog("Host has finished workshop.", "Thanks for attending");
+		}
 	}
 }

@@ -6,12 +6,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.guigarage.flatterfx.FlatterFX;
+import com.guigarage.flatterfx.FlatterInputType;
 import com.guigarage.flatterfx.overlay.DefaultOverlay;
 
 import eu.grmdev.wakshop.Main;
 import eu.grmdev.wakshop.gui.controllers.MainController;
-import eu.grmdev.wakshop.utils.Focusable;
 import eu.grmdev.wakshop.utils.Dialogs;
+import eu.grmdev.wakshop.utils.Focusable;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -51,7 +52,7 @@ public class GuiApp extends Application {
 		currentStage.setMinWidth(480);
 		changeViewTo(ViewType.LOGIN);
 		currentStage.show();
-		FlatterFX.style();
+		FlatterFX.style(FlatterInputType.TOUCH);
 	}
 	
 	public static void run() {

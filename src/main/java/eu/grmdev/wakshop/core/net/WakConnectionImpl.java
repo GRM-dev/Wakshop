@@ -2,6 +2,7 @@ package eu.grmdev.wakshop.core.net;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.UUID;
 
 import eu.grmdev.wakshop.utils.Dialogs;
 
@@ -28,10 +29,7 @@ public class WakConnectionImpl extends UnicastRemoteObject implements WakConnect
 	}
 	
 	@Override
-	public void requestClose() {
-		for (Client c : server.getConnectedClients().values()) {
-			c.close();
-		}
+	public void sendDisconnectRequestToServer(UUID id) {
+		server.disconnectClient(id);
 	}
-	
 }
