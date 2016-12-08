@@ -1,41 +1,42 @@
 package eu.grmdev.wakshop.core.net;
 
 import java.io.Serializable;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.util.UUID;
 
 import eu.grmdev.wakshop.core.Wakshop;
+import eu.grmdev.wakshop.core.model.Workshop;
 import eu.grmdev.wakshop.gui.GuiApp;
 import eu.grmdev.wakshop.gui.ViewType;
 import eu.grmdev.wakshop.utils.Dialogs;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 
-public class Client implements Serializable, Runnable {
+public class Client extends ConnectionMember implements Serializable, Runnable {
 	private static final long serialVersionUID = 1L;
-	private static Client instance;
-	private static final String LABEL = "wakConnector";
-	private Server server;
-	private Registry registry;
-	private InetAddress myHost;
-	private WakConnection wakConnector;
 	@Getter
 	private UUID id;
+	@Setter(value = AccessLevel.PACKAGE)
+	private Server server;
+	private WakConnection wakConnector;
 	private String host;
-	private int port;
+	@Getter
+	private StatusTimerTask statusTimerTask;
+	@Getter
+	private boolean connected;
 	@Getter
 	private boolean closing;
 	
-	private Client(String host, int port) throws UnknownHostException {
+	Client(String host, int port) throws UnknownHostException {
+		super(port);
 		this.host = host;
-		this.port = port;
 		this.closing = false;
-		this.myHost = InetAddress.getLocalHost();
 		this.id = UUID.randomUUID();
+		statusTimerTask = new StatusTimerTask();
 	}
 	
 	@Override
@@ -43,8 +44,11 @@ public class Client implements Serializable, Runnable {
 		try {
 			registry = LocateRegistry.getRegistry(host, port);
 			wakConnector = (WakConnection) registry.lookup(LABEL);
-			server = wakConnector.getServer(this);
+			Client c = wakConnector.addClient(this);
+			this.setServer(c.server);
+			this.setWorkshop(c.workshop);
 			System.out.println("Client " + myHost.getHostName() + " connected to: " + server.getHost() + ":" + server.getPort());
+			GuiApp.getInstance().changeViewTo(ViewType.WORKSHOP_MAIN);
 		}
 		catch (RemoteException | NotBoundException e) {
 			e.printStackTrace();
@@ -52,20 +56,11 @@ public class Client implements Serializable, Runnable {
 		}
 	}
 	
-	public static Client createClient(String host, int port) throws UnknownHostException {
-		if (instance != null) {
-			instance.closeConnectionWithServer();
-			instance = null;
-		}
-		instance = new Client(host, port);
-		return instance;
-	}
-	
 	public void closeConnectionWithServer() {
 		if (wakConnector != null) {
 			try {
 				if (!closing) {
-					closing = true;
+					setClosing(true);
 					wakConnector.sendDisconnectRequestToServer(this.id);
 				}
 			}
@@ -75,15 +70,25 @@ public class Client implements Serializable, Runnable {
 		}
 	}
 	
+	private void setClosing(boolean closing) {
+		this.closing = closing;
+		if (closing) {
+			statusTimerTask.setClosing(true);
+		}
+	}
+	
 	public String getUsername() {
 		return Wakshop.getInstance().getConfigApi().getConfig().getUsername();
 	}
 	
-	public void setClosing(boolean closing) {
-		this.closing = closing;
-		if (closing) {
-			GuiApp.getInstance().changeViewTo(ViewType.WORKSHOP_JOIN);
-			Dialogs.showInformationDialog("Host has finished workshop.", "Thanks for attending");
-		}
+	@Override
+	public boolean isActive() {
+		return this.server != null;
+	}
+	
+	@Override
+	public Workshop getWorkshop() {
+		if (server != null) { return server.getWorkshop(); }
+		return null;
 	}
 }

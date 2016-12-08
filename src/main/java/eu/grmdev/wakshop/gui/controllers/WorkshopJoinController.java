@@ -5,8 +5,6 @@ import java.util.ResourceBundle;
 
 import eu.grmdev.wakshop.core.IWakshop;
 import eu.grmdev.wakshop.core.Wakshop;
-import eu.grmdev.wakshop.gui.GuiApp;
-import eu.grmdev.wakshop.gui.ViewType;
 import eu.grmdev.wakshop.utils.Dialogs;
 import eu.grmdev.wakshop.utils.Focusable;
 import javafx.event.ActionEvent;
@@ -43,7 +41,6 @@ public class WorkshopJoinController extends BorderPane implements Focusable {
 				try {
 					wakshop.connectToServer(hostS, port);
 					System.out.println("Connected");
-					GuiApp.getInstance().changeViewTo(ViewType.WORKSHOP_MAIN);
 				}
 				catch (Exception ex) {
 					ex.printStackTrace();

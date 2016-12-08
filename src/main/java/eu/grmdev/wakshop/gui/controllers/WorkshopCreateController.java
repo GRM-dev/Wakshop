@@ -6,10 +6,9 @@ import java.util.ResourceBundle;
 
 import eu.grmdev.wakshop.core.IWakshop;
 import eu.grmdev.wakshop.core.Wakshop;
-import eu.grmdev.wakshop.gui.GuiApp;
-import eu.grmdev.wakshop.gui.ViewType;
-import eu.grmdev.wakshop.utils.Focusable;
+import eu.grmdev.wakshop.core.model.Workshop;
 import eu.grmdev.wakshop.utils.Dialogs;
+import eu.grmdev.wakshop.utils.Focusable;
 import javafx.beans.Observable;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.FXCollections;
@@ -89,19 +88,18 @@ public class WorkshopCreateController extends BorderPane implements Focusable {
 	}
 	
 	@FXML
-	private void startButton_Click(ActionEvent e) {
+	private synchronized void startButton_Click(ActionEvent e) {
+		String item = comboBox.getSelectionModel().getSelectedItem();
+		Workshop w = wakshop.getWorkshopApi().getWorkshop(item);
 		System.out.println("Start Workshop");
-		Thread t = new Thread(() -> {
-			try {
-				wakshop.startServer(Integer.parseInt(tfPort.getText()));
-				System.out.println("After Connnection Establishment");
-			}
-			catch (Exception ex) {
-				ex.printStackTrace();
-				Dialogs.showExceptionDialog(ex, "Could not create server!");
-			}
-		});
-		t.start();
-		GuiApp.getInstance().changeViewTo(ViewType.WORKSHOP_MAIN);
+		int port = Integer.parseInt(tfPort.getText());
+		try {
+			wakshop.startServer(port, w);
+			System.out.println("After Connnection Establishment");
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			Dialogs.showExceptionDialog(ex, "Could not create server!");
+		}
 	}
 }

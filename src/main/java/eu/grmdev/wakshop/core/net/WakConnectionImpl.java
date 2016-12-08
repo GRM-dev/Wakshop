@@ -16,10 +16,10 @@ public class WakConnectionImpl extends UnicastRemoteObject implements WakConnect
 	}
 	
 	@Override
-	public Server getServer(Client client) throws RemoteException {
+	public synchronized Client addClient(Client client) throws RemoteException {
 		try {
-			server.addClient(client);
-			return server;
+			if ((client = server.addClient(client)) == null) { throw new Exception("Adding your client failed"); }
+			return client;
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -29,7 +29,7 @@ public class WakConnectionImpl extends UnicastRemoteObject implements WakConnect
 	}
 	
 	@Override
-	public void sendDisconnectRequestToServer(UUID id) {
+	public synchronized void sendDisconnectRequestToServer(UUID id) {
 		server.disconnectClient(id);
 	}
 }

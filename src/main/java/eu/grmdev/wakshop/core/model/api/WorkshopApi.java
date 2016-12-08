@@ -47,4 +47,8 @@ public class WorkshopApi {
 		}
 		return l;
 	}
+	
+	public Workshop getWorkshop(String name) {
+		return (Workshop) H.request(Workshop.class).eq("title", name).first();
+	}
 }

@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public interface WakConnection extends Remote {
 	
-	Server getServer(Client client) throws RemoteException;
+	Client addClient(Client client) throws RemoteException;
 	
 	void sendDisconnectRequestToServer(UUID id) throws RemoteException;;
 	

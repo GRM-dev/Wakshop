@@ -1,5 +1,7 @@
 package eu.grmdev.wakshop.gui;
 
+import static eu.grmdev.wakshop.utils.GuiHelper.runInFxThread;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -61,23 +63,23 @@ public class GuiApp extends Application {
 		}
 	}
 	
-	public Scene changeViewTo(ViewType viewType) {
-		try {
-			Scene view;
-			if (!views.containsKey(viewType)) {
-				view = createView(viewType);
+	public synchronized void changeViewTo(ViewType viewType) {
+		runInFxThread(() -> {
+			try {
+				Scene view;
+				if (!views.containsKey(viewType)) {
+					view = createView(viewType);
+				}
+				else {
+					view = views.get(viewType);
+				}
+				currentStage.setScene(view);
 			}
-			else {
-				view = views.get(viewType);
+			catch (IOException e) {
+				e.printStackTrace();
+				Dialogs.showExceptionDialog(e, "Changing View to: " + viewType.name() + " has failed");
 			}
-			currentStage.setScene(view);
-			return view;
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-			Dialogs.showExceptionDialog(e, "Changing View to: " + viewType.name() + " has failed");
-			return null;
-		}
+		});
 	}
 	
 	public static Parent getNode(ViewType viewType, Focusable root) {
@@ -95,11 +97,11 @@ public class GuiApp extends Application {
 		}
 	}
 	
-	private static Scene createView(ViewType viewType) throws IOException {
+	private static synchronized Scene createView(ViewType viewType) throws IOException {
 		return createView(viewType, null);
 	}
 	
-	private static Scene createView(ViewType viewType, Focusable root) throws IOException {
+	private static synchronized Scene createView(ViewType viewType, Focusable root) throws IOException {
 		URL viewUrl = GuiApp.class.getResource(viewType.getPath());
 		if (viewUrl == null) { throw new IOException("Can't find file: " + viewType.getPath()); }
 		FXMLLoader loader = new FXMLLoader(viewUrl);

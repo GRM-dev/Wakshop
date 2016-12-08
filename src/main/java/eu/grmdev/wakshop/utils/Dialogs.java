@@ -1,5 +1,7 @@
 package eu.grmdev.wakshop.utils;
 
+import static eu.grmdev.wakshop.utils.GuiHelper.runInFxThread;
+
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -7,7 +9,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import eu.grmdev.wakshop.gui.GuiApp;
-import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
@@ -60,15 +61,6 @@ public class Dialogs {
 			alert.getDialogPane().setExpandableContent(expContent);
 			alert.showAndWait();
 		});
-	}
-	
-	private static void runInFxThread(Runnable r) {
-		if (Platform.isFxApplicationThread()) {
-			r.run();
-		}
-		else {
-			Platform.runLater(r);
-		}
 	}
 	
 	public static Optional<ButtonType> showConfirmationDialog(String title, String header, String content) {

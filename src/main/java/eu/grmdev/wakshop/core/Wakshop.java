@@ -1,9 +1,13 @@
 package eu.grmdev.wakshop.core;
 
+import eu.grmdev.wakshop.core.model.Workshop;
 import eu.grmdev.wakshop.core.model.api.ConfigApi;
 import eu.grmdev.wakshop.core.model.api.WorkshopApi;
 import eu.grmdev.wakshop.core.model.database.Database;
+import eu.grmdev.wakshop.core.net.ConnectionComponent;
+import eu.grmdev.wakshop.core.net.ConnectionMember;
 import eu.grmdev.wakshop.core.net.LocalNetHandler;
+import eu.grmdev.wakshop.core.net.Server;
 import eu.grmdev.wakshop.utils.Dialogs;
 import lombok.Getter;
 
@@ -30,10 +34,10 @@ public class Wakshop implements IWakshop {
 	}
 	
 	@Override
-	public void startServer(int port) throws Exception {
+	public void startServer(int port, Workshop workshop) throws Exception {
 		closeAllNetConnections();
 		try {
-			wakNetHandler = new LocalNetHandler(port);
+			wakNetHandler = new LocalNetHandler(port, workshop);
 			wakNetHandler.startThread();
 		}
 		catch (Exception e) {
@@ -61,6 +65,30 @@ public class Wakshop implements IWakshop {
 			wakNetHandler.closeNetConnection();
 			wakNetHandler = null;
 		}
+	}
+	
+	@Override
+	public Workshop getCurrentlyRunningWorkshop() {
+		if (isActive()) { return wakNetHandler.getCm().getWorkshop(); }
+		return null;
+	}
+	
+	@Override
+	public boolean isActive() {
+		
+		if (wakNetHandler != null) {
+			if (wakNetHandler.getCm() != null) {
+				if (wakNetHandler.getConnectionComponent() == ConnectionComponent.CLIENT) {
+					ConnectionMember c = wakNetHandler.getCm();
+					return c.isActive() && c.getWorkshop() != null;
+				}
+				else if (wakNetHandler.getConnectionComponent() == ConnectionComponent.SERVER) {
+					Server s = (Server) wakNetHandler.getCm();
+					return s.isActive();
+				}
+			}
+		}
+		return false;
 	}
 	
 	public static synchronized IWakshop getInstance() {

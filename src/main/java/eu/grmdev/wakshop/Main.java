@@ -7,6 +7,7 @@ import javafx.application.Platform;
 public class Main {
 	
 	public static void main(String[] args) {
+		Thread.currentThread().setName("Main App Thread");
 		System.out.println("Welcome to Wakshop!");
 		new Thread(() -> {
 			Wakshop.getInstance();
@@ -26,8 +27,7 @@ public class Main {
 			});
 			Wakshop.getInstance().closeAllNetConnections();
 			Wakshop.getInstance().getDatabase().close();
-		});
-		t.setName("Closing thread");
+		}, "Closing thread");
 		t.start();
 	}
 }
