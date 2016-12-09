@@ -18,14 +18,14 @@ public class LocalNetHandler {
 	public LocalNetHandler(int port, Workshop workshop) throws Exception {
 		this();
 		connectionComponent = ConnectionComponent.SERVER;
-		cm = ConnectionMember.createInstance(connectionComponent, null, port, workshop);
+		cm = ConnectionMember.createNewInstance(connectionComponent, null, port, workshop);
 		runningThread = new Thread(cm, "Server Connection Thread");
 	}
 	
 	public LocalNetHandler(String host, int port) throws Exception {
 		this();
 		connectionComponent = ConnectionComponent.CLIENT;
-		cm = ConnectionMember.createInstance(connectionComponent, host, port, null);
+		cm = ConnectionMember.createNewInstance(connectionComponent, host, port, null);
 		runningThread = new Thread(cm, "Client Connection Thread");
 		timer = new Timer("Connection Status Timer", true);
 	}

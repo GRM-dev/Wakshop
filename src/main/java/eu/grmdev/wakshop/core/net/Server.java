@@ -17,7 +17,7 @@ import eu.grmdev.wakshop.utils.Dialogs;
 
 public class Server extends ConnectionMember {
 	private static final long serialVersionUID = 1L;
-	private Map<UUID, Client> connectedClients;
+	private Map<UUID, ClientService> connectedClients;
 	
 	Server(int port, Workshop workshop) throws UnknownHostException, RemoteException {
 		super(port);
@@ -30,39 +30,44 @@ public class Server extends ConnectionMember {
 	@Override
 	public void run() {
 		try {
-			registry.bind(LABEL, wakConnection);
+			registry.rebind(LABEL, wakConnection);
 			System.out.println("Server " + myHost.getHostName() + " listening on: " + myHost.getHostAddress() + ":" + port);
 			GuiApp.getInstance().changeViewTo(ViewType.WORKSHOP_MAIN);
 		}
-		catch (RemoteException | AlreadyBoundException e) {
+		catch (RemoteException e) {
 			e.printStackTrace();
 			Dialogs.showExceptionDialog(e, "Exception while starting server");
 		}
 	}
 	
-	public Client addClient(Client client) {
+	public boolean addClient(UUID cid, String name) {
 		try {
-			UUID cid;
-			if (client == null || (cid = client.getId()) == null) { throw new NullPointerException("Incorrect client type was trying to connect!"); }
+			if (cid == null) { throw new NullPointerException("Incorrect client id was trying to connect!"); }
 			if (connectedClients.containsKey(cid)) { throw new AlreadyBoundException("client with id: " + cid + " already connected."); }
+			ClientService client = (ClientService) registry.lookup(cid + name);
 			connectedClients.put(cid, client);
-			System.out.println("Client added: '" + cid + "'; Name: " + client.getUsername());
+			System.out.println("Client connected: '" + cid + "'; Name: " + client.getUsername());
 			client.setServer(this);
 			client.setWorkshop(workshop);
-			return client;
+			return true;
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return false;
 		}
 	}
 	
-	public void disconnectClient(UUID id) {
+	public synchronized void disconnectClient(UUID id) {
 		if (connectedClients.containsKey(id)) {
-			Client c = connectedClients.get(id);
-			c.closeConnectionWithServer();
+			ClientService c = connectedClients.get(id);
+			try {
+				c.closeConnectionWithServer();
+			}
+			catch (RemoteException e) {
+				e.printStackTrace();
+			}
 			connectedClients.remove(id);
-			System.out.println("Client: '" + id + "' disconnected");
+			System.out.println("Client disconnected: '" + id + "'");
 		}
 	}
 	
@@ -88,8 +93,13 @@ public class Server extends ConnectionMember {
 	}
 	
 	private void closeAllClientConnections() {
-		for (Client c : connectedClients.values()) {
-			c.closeConnectionWithServer();
+		for (ClientService c : connectedClients.values()) {
+			try {
+				c.closeConnectionWithServer();
+			}
+			catch (RemoteException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	

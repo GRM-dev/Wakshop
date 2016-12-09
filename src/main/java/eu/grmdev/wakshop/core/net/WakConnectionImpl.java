@@ -16,15 +16,15 @@ public class WakConnectionImpl extends UnicastRemoteObject implements WakConnect
 	}
 	
 	@Override
-	public synchronized Client addClient(Client client) throws RemoteException {
+	public synchronized boolean addClient(ClientService client) throws RemoteException {
 		try {
-			if ((client = server.addClient(client)) == null) { throw new Exception("Adding your client failed"); }
-			return client;
+			if (!server.addClient(client.getId(), client.getUsername())) { throw new Exception("Adding your client failed"); }
+			return true;
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 			Dialogs.showExceptionDialog(e, "False client was trying to connect!");
-			return null;
+			return false;
 		}
 	}
 	

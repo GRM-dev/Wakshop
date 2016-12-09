@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.UUID;
 
 import eu.grmdev.wakshop.core.Wakshop;
@@ -12,15 +13,14 @@ import eu.grmdev.wakshop.core.model.Workshop;
 import eu.grmdev.wakshop.gui.GuiApp;
 import eu.grmdev.wakshop.gui.ViewType;
 import eu.grmdev.wakshop.utils.Dialogs;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-public class Client extends ConnectionMember implements Serializable, Runnable {
+public class Client extends ConnectionMember implements Serializable, Runnable, ClientService {
 	private static final long serialVersionUID = 1L;
 	@Getter
 	private UUID id;
-	@Setter(value = AccessLevel.PACKAGE)
+	@Setter
 	private Server server;
 	private WakConnection wakConnector;
 	private String host;
@@ -44,9 +44,9 @@ public class Client extends ConnectionMember implements Serializable, Runnable {
 		try {
 			registry = LocateRegistry.getRegistry(host, port);
 			wakConnector = (WakConnection) registry.lookup(LABEL);
-			Client c = wakConnector.addClient(this);
-			this.setServer(c.server);
-			this.setWorkshop(c.workshop);
+			ClientService l = (ClientService) UnicastRemoteObject.exportObject(this, 0);
+			registry.rebind(this.getId() + this.getUsername(), l);
+			wakConnector.addClient(this);
 			System.out.println("Client " + myHost.getHostName() + " connected to: " + server.getHost() + ":" + server.getPort());
 			GuiApp.getInstance().changeViewTo(ViewType.WORKSHOP_MAIN);
 		}
