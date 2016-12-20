@@ -13,7 +13,7 @@ import lombok.Setter;
 public abstract class ConnectionMember implements Runnable, Serializable {
 	private static final long serialVersionUID = 1L;
 	protected static final String LABEL = "wakConnector";
-	protected Registry registry;
+	protected static Registry registry;
 	protected InetAddress myHost;
 	protected WakConnection wakConnection;
 	@Getter

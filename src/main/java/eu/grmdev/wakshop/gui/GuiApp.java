@@ -2,6 +2,7 @@ package eu.grmdev.wakshop.gui;
 
 import static eu.grmdev.wakshop.utils.GuiHelper.runInFxThread;
 
+import java.awt.Dimension;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -37,6 +38,8 @@ public class GuiApp extends Application {
 	private static Map<ViewType, Scene> views;
 	@Getter
 	private static Image icon;
+	private static Dimension dimStart = new Dimension(480, 400);
+	private static Dimension dimWorkshop = new Dimension(600, 800);
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -50,8 +53,8 @@ public class GuiApp extends Application {
 		currentStage.setTitle("Wakshop - Manage your workshops freely");
 		icon = new Image(getClass().getResourceAsStream("/images/logo_s.png"));
 		currentStage.getIcons().add(icon);
-		currentStage.setMinHeight(400);
-		currentStage.setMinWidth(480);
+		currentStage.setMinHeight(dimStart.getHeight());
+		currentStage.setMinWidth(dimStart.getWidth());
 		changeViewTo(ViewType.LOGIN);
 		currentStage.show();
 		FlatterFX.style(FlatterInputType.TOUCH);
@@ -72,6 +75,14 @@ public class GuiApp extends Application {
 				}
 				else {
 					view = views.get(viewType);
+				}
+				if (viewType == ViewType.WORKSHOP_MAIN) {
+					if (currentStage.getMinHeight() < dimWorkshop.getHeight()) {
+						currentStage.setMinHeight(dimWorkshop.getHeight());
+					}
+					if (currentStage.getMinWidth() < dimWorkshop.getHeight()) {
+						currentStage.setMinWidth(dimWorkshop.getWidth());
+					}
 				}
 				currentStage.setScene(view);
 			}

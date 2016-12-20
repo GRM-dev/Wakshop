@@ -2,15 +2,19 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.grmdev.wakshop.gui.controllers.workshops.WorkshopMainController">
    <top>
-      <HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
+      <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
          <children>
             <Button mnemonicParsing="false" onAction="#exitWorkshopsButton_Click" text="&lt;- Exit Workshops" />
-            <Label text="Title: " />
+            <Label fx:id="lblHostType" text="Title: " />
             <Label fx:id="lblTitle" alignment="CENTER" text="Title" textAlignment="CENTER" />
          </children>
       </HBox>
@@ -18,4 +22,30 @@
    <bottom>
       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </bottom>
+   <left>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <FlowPane orientation="VERTICAL" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Button mnemonicParsing="false" text="Button" />
+                  <Button mnemonicParsing="false" text="Button" />
+               </children>
+            </FlowPane>
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
+         <children>
+            <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" tabClosingPolicy="UNAVAILABLE" />
+         </children>
+      </HBox>
+   </center>
+   <right>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <TitledPane fx:id="tpUsers" animated="false" text="Users on meeting" />
+         </children>
+      </VBox>
+   </right>
 </BorderPane>

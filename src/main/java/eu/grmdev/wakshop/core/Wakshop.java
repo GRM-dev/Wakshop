@@ -91,6 +91,12 @@ public class Wakshop implements IWakshop {
 		return false;
 	}
 	
+	@Override
+	public ConnectionComponent whatAmIOnCurrentWorkshops() {
+		if (isActive()) { return wakNetHandler.getConnectionComponent(); }
+		return null;
+	}
+	
 	public static synchronized IWakshop getInstance() {
 		if (instance == null) {
 			instance = new Wakshop();

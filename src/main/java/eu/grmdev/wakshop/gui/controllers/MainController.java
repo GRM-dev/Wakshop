@@ -8,11 +8,10 @@ import java.util.ResourceBundle;
 import eu.grmdev.wakshop.Main;
 import eu.grmdev.wakshop.gui.GuiApp;
 import eu.grmdev.wakshop.gui.ViewType;
-import eu.grmdev.wakshop.utils.Focusable;
 import eu.grmdev.wakshop.utils.Dialogs;
+import eu.grmdev.wakshop.utils.Focusable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
@@ -25,7 +24,7 @@ public class MainController implements Focusable {
 	private VBox vBox;
 	@FXML
 	private Button homeButton, settingsButton;
-	private Map<ViewType, Initializable> innerControllers = new HashMap<>();
+	private Map<ViewType, Focusable> innerControllers = new HashMap<>();
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {

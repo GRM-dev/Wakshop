@@ -56,6 +56,20 @@ public class Client extends ConnectionMember implements Serializable, Runnable, 
 		}
 	}
 	
+	@Override
+	public void workshopUpdated(Workshop workshop) {
+		if (this.workshop.getTitle() != workshop.getTitle()) {
+			this.workshop.setTitle(workshop.getTitle());
+			this.workshop.notifyObservers();
+		}
+		if (this.workshop.getMembers().size() != workshop.getMembers().size() || !this.workshop.getMembers().equals(workshop.getMembers())) {
+			this.workshop.getMembers().clear();
+			this.workshop.setReorganizedMembers(workshop.getMembers());
+			this.workshop.notifyObservers();
+		}
+	}
+	
+	@Override
 	public void closeConnectionWithServer() {
 		if (wakConnector != null) {
 			try {
@@ -77,6 +91,7 @@ public class Client extends ConnectionMember implements Serializable, Runnable, 
 		}
 	}
 	
+	@Override
 	public String getUsername() {
 		return Wakshop.getInstance().getConfigApi().getConfig().getUsername();
 	}

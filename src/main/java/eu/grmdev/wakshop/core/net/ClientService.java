@@ -16,4 +16,6 @@ public interface ClientService extends Remote {
 	String getUsername() throws RemoteException;
 	
 	void closeConnectionWithServer() throws RemoteException;
+	
+	void workshopUpdated(Workshop workshop) throws RemoteException;
 }

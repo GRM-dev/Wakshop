@@ -5,6 +5,7 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,19 +19,23 @@ import eu.grmdev.wakshop.utils.Dialogs;
 public class Server extends ConnectionMember {
 	private static final long serialVersionUID = 1L;
 	private Map<UUID, ClientService> connectedClients;
+	private static Map<Integer, Registry> registry = new HashMap<>();
 	
 	Server(int port, Workshop workshop) throws UnknownHostException, RemoteException {
 		super(port);
+		workshop.setHost(this);
 		this.workshop = workshop;
 		connectedClients = new HashMap<>();
 		wakConnection = new WakConnectionImpl(this, port);
-		registry = LocateRegistry.createRegistry(port);
+		if (!registry.containsKey(port)) {
+			registry.put(port, LocateRegistry.createRegistry(port));
+		}
 	}
 	
 	@Override
 	public void run() {
 		try {
-			registry.rebind(LABEL, wakConnection);
+			registry.get(port).rebind(LABEL, wakConnection);
 			System.out.println("Server " + myHost.getHostName() + " listening on: " + myHost.getHostAddress() + ":" + port);
 			GuiApp.getInstance().changeViewTo(ViewType.WORKSHOP_MAIN);
 		}
@@ -44,11 +49,12 @@ public class Server extends ConnectionMember {
 		try {
 			if (cid == null) { throw new NullPointerException("Incorrect client id was trying to connect!"); }
 			if (connectedClients.containsKey(cid)) { throw new AlreadyBoundException("client with id: " + cid + " already connected."); }
-			ClientService client = (ClientService) registry.lookup(cid + name);
+			ClientService client = (ClientService) registry.get(port).lookup(cid + name);
 			connectedClients.put(cid, client);
 			System.out.println("Client connected: '" + cid + "'; Name: " + client.getUsername());
 			client.setServer(this);
 			client.setWorkshop(workshop);
+			this.workshop.addMember(client);
 			return true;
 		}
 		catch (Exception e) {
@@ -73,9 +79,9 @@ public class Server extends ConnectionMember {
 	
 	public void closeServer() {
 		closeAllClientConnections();
-		if (registry != null) {
+		if (registry.containsKey(port)) {
 			try {
-				registry.unbind(LABEL);
+				registry.get(port).unbind(LABEL);
 			}
 			catch (RemoteException | NotBoundException e) {
 				e.printStackTrace();
@@ -110,7 +116,7 @@ public class Server extends ConnectionMember {
 	@Override
 	public boolean isActive() {
 		try {
-			String[] list = registry.list();
+			String[] list = registry.get(port).list();
 			if (list == null || list.length == 0) { return false; }
 			for (String s : list) {
 				if (s.equals(LABEL)) { return wakConnection != null; }
