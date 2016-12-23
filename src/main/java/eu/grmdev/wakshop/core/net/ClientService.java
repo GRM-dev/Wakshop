@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import java.util.UUID;
 
 import eu.grmdev.wakshop.core.model.Workshop;
+import eu.grmdev.wakshop.core.model.misc.NotifyEvent;
 
 public interface ClientService extends Remote {
 	void setWorkshop(Workshop workshop) throws RemoteException;
@@ -17,5 +18,5 @@ public interface ClientService extends Remote {
 	
 	void closeConnectionWithServer() throws RemoteException;
 	
-	void workshopUpdated(Workshop workshop) throws RemoteException;
+	void workshopUpdated(NotifyEvent event) throws RemoteException;
 }

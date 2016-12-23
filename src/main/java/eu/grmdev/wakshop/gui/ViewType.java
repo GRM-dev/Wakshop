@@ -38,7 +38,6 @@ public enum ViewType {
 	}
 	
 	public Focusable newFor(ConnectionMember client) throws Exception {
-		Constructor<?>[] csss = controllerClazz.getDeclaredConstructors();
 		Constructor<? extends Focusable> construct = controllerClazz.getDeclaredConstructor(ConnectionMember.class);
 		return construct.newInstance(client);
 	}

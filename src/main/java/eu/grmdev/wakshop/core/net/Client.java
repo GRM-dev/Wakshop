@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import eu.grmdev.wakshop.core.Wakshop;
 import eu.grmdev.wakshop.core.model.Workshop;
+import eu.grmdev.wakshop.core.model.misc.NotifyEvent;
 import eu.grmdev.wakshop.gui.GuiApp;
 import eu.grmdev.wakshop.gui.ViewType;
 import eu.grmdev.wakshop.utils.Dialogs;
@@ -46,9 +47,13 @@ public class Client extends ConnectionMember implements Serializable, Runnable, 
 			wakConnector = (WakConnection) registry.lookup(LABEL);
 			ClientService l = (ClientService) UnicastRemoteObject.exportObject(this, 0);
 			registry.rebind(this.getId() + this.getUsername(), l);
-			wakConnector.addClient(this);
-			System.out.println("Client " + myHost.getHostName() + " connected to: " + server.getHost() + ":" + server.getPort());
-			GuiApp.getInstance().changeViewTo(ViewType.WORKSHOP_MAIN);
+			if (wakConnector.addClient(this)) {
+				System.out.println("Client " + myHost.getHostName() + " connected to: " + server.getHost() + ":" + server.getPort());
+				GuiApp.getInstance().changeViewTo(ViewType.WORKSHOP_MAIN);
+			}
+			else {
+				throw new RemoteException("Not connected!");
+			}
 		}
 		catch (RemoteException | NotBoundException e) {
 			e.printStackTrace();
@@ -57,16 +62,9 @@ public class Client extends ConnectionMember implements Serializable, Runnable, 
 	}
 	
 	@Override
-	public void workshopUpdated(Workshop workshop) {
-		if (this.workshop.getTitle() != workshop.getTitle()) {
-			this.workshop.setTitle(workshop.getTitle());
-			this.workshop.notifyObservers();
-		}
-		if (this.workshop.getMembers().size() != workshop.getMembers().size() || !this.workshop.getMembers().equals(workshop.getMembers())) {
-			this.workshop.getMembers().clear();
-			this.workshop.setReorganizedMembers(workshop.getMembers());
-			this.workshop.notifyObservers();
-		}
+	public void workshopUpdated(NotifyEvent event) {
+		this.workshop.captureEvent(event);
+		
 	}
 	
 	@Override

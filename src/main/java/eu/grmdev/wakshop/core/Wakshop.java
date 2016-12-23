@@ -35,7 +35,7 @@ public class Wakshop implements IWakshop {
 	
 	@Override
 	public void startServer(int port, Workshop workshop) throws Exception {
-		closeAllNetConnections();
+		closeAllExistingNetConnections();
 		try {
 			wakNetHandler = new LocalNetHandler(port, workshop);
 			wakNetHandler.startThread();
@@ -48,7 +48,7 @@ public class Wakshop implements IWakshop {
 	
 	@Override
 	public void connectToServer(String host, int port) {
-		closeAllNetConnections();
+		closeAllExistingNetConnections();
 		try {
 			wakNetHandler = new LocalNetHandler(host, port);
 			wakNetHandler.startThread();
@@ -60,7 +60,7 @@ public class Wakshop implements IWakshop {
 	}
 	
 	@Override
-	public void closeAllNetConnections() {
+	public void closeAllExistingNetConnections() {
 		if (wakNetHandler != null) {
 			wakNetHandler.closeNetConnection();
 			wakNetHandler = null;

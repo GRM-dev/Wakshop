@@ -101,7 +101,7 @@ public class WorkshopMainController implements Focusable {
 	@FXML
 	private void exitWorkshopsButton_Click(ActionEvent e) {
 		System.out.println("Exit Workshops");
-		wakshop.closeAllNetConnections();
+		wakshop.closeAllExistingNetConnections();
 		GuiApp.getInstance().changeViewTo(ViewType.MAIN);
 	}
 }
